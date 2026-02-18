@@ -1,13 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserPosts } from "../services/user-auth/user/get_user_posts";
 import { $Utilities } from "../utilities/utilities-repository";
+import { format } from "date-fns";
 export default function Home() {
   const { data } = useQuery({
     queryKey: ["posts"],
     queryFn: () => getUserPosts("698dad303bf973711764b39f"),
   });
-  console.log(data);
-  console.log($Utilities.Dates.displayRelativeTime("2026-02-18T20:39:51.474Z"));
+
+  const date = $Utilities.Dates.displayPostAndCommentDate(
+    "2026-02-13T21:18:41.484Z",
+  );
+  console.log(date);
+
+  //  jsObjectDate , tokens dateString
+
   return <div>Hello From home!</div>;
 }
 

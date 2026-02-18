@@ -1,5 +1,5 @@
-import { differenceInSeconds, parseISO } from "date-fns";
-export function displayRelativeTime(createdAt) {
+import { differenceInSeconds, format, parseISO } from "date-fns";
+function displayRelativeTime(createdAt) {
   const todayDate = new Date();
   createdAt = parseISO(createdAt);
   const seconds = differenceInSeconds(todayDate, createdAt);
@@ -20,8 +20,14 @@ export function displayRelativeTime(createdAt) {
   return "just now";
 }
 
+function displayPostAndCommentDate(createdDate) {
+  createdDate = parseISO(createdDate);
+  return format(createdDate, "MMM dd, hh:mm a");
+}
+
 export const Dates = {
   displayRelativeTime,
+  displayPostAndCommentDate,
 };
 /*
 1- // get created at date in seconds  2026-02-12
