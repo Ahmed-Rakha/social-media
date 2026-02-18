@@ -11,7 +11,6 @@ import {
 } from "@heroui/react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
 import { parseDate } from "@internationalized/date";
 import { signupSchemaValidation } from "../../schemas/validations/auth/signup_schema";
 import { useMutation } from "@tanstack/react-query";
