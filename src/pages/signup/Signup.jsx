@@ -15,7 +15,8 @@ import { toast } from "react-toastify";
 import { parseDate } from "@internationalized/date";
 import { signupSchemaValidation } from "../../schemas/validations/auth/signup_schema";
 import { useMutation } from "@tanstack/react-query";
-import { AUTH_REPOSITORY } from "../../services/user-auth/auth/auth_repository";
+import { $Services } from "../../services/services-repository";
+import { $Utilities } from "../../utilities/utilities-repository";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -41,13 +42,15 @@ export default function Signup() {
     mutate(payload);
   }
   const { mutate, isPending } = useMutation({
-    mutationFn: (payload) => AUTH_REPOSITORY.signup(payload),
+    mutationFn: (payload) => $Services.AUTH_REPOSITORY.signup(payload),
     onSuccess: () => {
-      toast.success("Your account has been created successfully!");
+      $Utilities.Alerts.displaySuccess(
+        "Your account has been created successfully!",
+      );
       navigate("/feed");
     },
     onError: (error) => {
-      toast.error(error.response.data.error);
+      $Utilities.Alerts.displayError(error, "Error creating account");
     },
   });
 

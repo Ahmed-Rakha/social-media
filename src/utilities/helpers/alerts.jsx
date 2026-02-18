@@ -7,3 +7,5 @@ export function displayError(error, message = "Invalid data!") {
 export function displaySuccess(message = "Success!") {
   toast.success(message);
 }
+
+export const Alerts = { displayError, displaySuccess };

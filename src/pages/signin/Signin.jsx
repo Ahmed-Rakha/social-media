@@ -4,13 +4,11 @@ import image from "../../assets/images/avatar-generations_rpge.jpg";
 import { Form, Input } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-hot-toast";
 import AppButton from "../../components/shared-components/appbutton/AppButton";
 import { signinSchemaValidation } from "../../schemas/validations/auth/signin_schema";
 import { useMutation } from "@tanstack/react-query";
-import { AUTH_REPOSITORY } from "../../services/user-auth/auth/auth_repository";
-import { displayError, displaySuccess } from "../../utilities/helpers/helpers";
-
+import { $Services } from "../../services/services-repository";
+import { $Utilities } from "../../utilities/utilities-repository";
 export default function Signin() {
   const navigate = useNavigate();
 
@@ -32,13 +30,13 @@ export default function Signin() {
   }
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (payload) => AUTH_REPOSITORY.signin(payload),
+    mutationFn: (payload) => $Services.AUTH_REPOSITORY.signin(payload),
     onSuccess: () => {
-      displaySuccess("Login successfully!");
+      $Utilities.Alerts.displaySuccess("Login successfully!");
       navigate("/feed");
     },
     onError: (error) => {
-      displayError(error);
+      $Utilities.Alerts.displayError(error);
     },
   });
 
