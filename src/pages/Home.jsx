@@ -1,16 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { healthCheck } from "../services/health-check/health_check";
-import { COMMENTS_REPOSITORY } from "../services/comments-replies/comments/comments_repository";
-import { REPLIES_REPOSITORY } from "../services/comments-replies/replies/replies_repository";
-import { signup } from "../services/user-auth/auth/signup";
-import { signin } from "../services/user-auth/auth/signin";
-import { changePassword } from "../services/user-auth/auth/change_password";
-import { uploadProfilePhoto } from "../services/user-auth/user/upload_profile_photo";
-import { getMyProfile } from "../services/user-auth/user/get_my_profile";
-import { getBookmarks } from "../services/user-auth/user/get_bookmarks";
-import { getFollowSuggestions } from "../services/user-auth/user/get_follow_suggestions";
-import { getUserProfile } from "../services/user-auth/user/get_user_profile";
-import { followUnfollowUser } from "../services/user-auth/user/follow_unfollow_user";
 import { getUserPosts } from "../services/user-auth/user/get_user_posts";
 export default function Home() {
   const { data } = useQuery({
