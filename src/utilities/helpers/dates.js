@@ -1,4 +1,8 @@
 import { differenceInSeconds, format, parseISO } from "date-fns";
+
+/**
+ * @param {string} createdAt - The date should be ISO date string
+ */
 function displayRelativeTime(createdAt) {
   const todayDate = new Date();
   createdAt = parseISO(createdAt);
@@ -19,7 +23,9 @@ function displayRelativeTime(createdAt) {
   }
   return "just now";
 }
-
+/**
+ * @param {string} createdAt - The date should be ISO date string
+ */
 function displayPostAndCommentDate(createdDate) {
   createdDate = parseISO(createdDate);
   return format(createdDate, "MMM dd, hh:mm a");
@@ -29,16 +35,3 @@ export const Dates = {
   displayRelativeTime,
   displayPostAndCommentDate,
 };
-/*
-1- // get created at date in seconds  2026-02-12
-2/3/2026
-
-date fns
-
-day ==> 24 * 60 * 60 = 86400  result > 1 12d
-hours ==> 60 * 60 = 3600 result => 22h
-minutes ==> 60 
-s = 1
-
-
-*/

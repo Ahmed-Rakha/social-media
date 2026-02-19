@@ -36,6 +36,7 @@ export default function Home() {
   console.log(data);
   console.log("error message", error);
 
+  $Utilities.Dates.displayRelativeTime("2026-02-12T12:00:00.000Z");
   //  jsObjectDate , tokens dateString
 
   function handleImage(e) {
