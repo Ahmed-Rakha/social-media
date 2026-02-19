@@ -1,32 +1,23 @@
-import axios from "axios";
+import { $API } from "../../../api/axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const TOKEN = localStorage.getItem("token");
+/**
+ * @param {string} postId - The postId is required
+ * @param {string} commentId - The commentId is required
+ * @param {{
+ *    content: string,
+ *    imageFile?: File
+ *  } | {
+ *    content?: string,
+ *    imageFile: File
+ * }} payload - The payload is required
+ */
 
-export const createReply = async (postId, commentId, content, image) => {
+export const createReply = async (postId, commentId, payload) => {
   const ROUTE = `posts/${postId}/comments/${commentId}/replies`;
   const formData = new FormData();
-  formData.append("content", content);
-  image && formData.append("image", image);
+  payload.content && formData.append("content", payload.content);
+  payload.imageFile && formData.append("image", payload.imageFile);
 
-  try {
-    const response = await axios.post(`${BASE_URL}/${ROUTE}`, formData, {
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-      },
-    });
-
-    return response;
-  } catch (error) {
-    if (error.response) {
-      console.log("Server Error", error?.response);
-      throw error;
-    }
-    if (error.request) {
-      console.log("Network Error", error?.request);
-      throw "Network Error: " + error?.request;
-    }
-    console.log("Unknown Error", error?.message);
-    throw error?.message;
-  }
+  const response = await $API.privateApi.post(`${ROUTE}`, formData);
+  return response;
 };
