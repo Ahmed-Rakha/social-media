@@ -5,7 +5,7 @@ import { $API } from "../../../api/axios";
  */
 
 export const changePassword = async (payload) => {
-  const ROUTE = "/users/change-password";
+  const ROUTE = "users/change-password";
 
   const response = await $API.privateApi.patch(`${ROUTE}`, payload, {
     headers: {

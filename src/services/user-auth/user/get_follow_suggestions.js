@@ -8,7 +8,7 @@ export const getFollowSuggestions = async (queryParams) => {
     limit: 1,
     ...queryParams,
   };
-  const ROUTE = `/users/suggestions`;
+  const ROUTE = `users/suggestions`;
 
   const response = await $API.privateApi.get(`${ROUTE}`, {
     params: {

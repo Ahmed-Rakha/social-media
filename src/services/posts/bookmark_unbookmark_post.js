@@ -1,21 +1,13 @@
-import axios from "axios";
+import { $API } from "../../api/axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const TOKEN = localStorage.getItem("token");
-
+/**
+ * @param {string} postId - The postId is required
+ */
 export const bookmarkAndUnbookmarkPost = async (postId) => {
   const ROUTE = `posts/${postId}/bookmark`;
 
   try {
-    const response = await axios.put(
-      `${BASE_URL}/${ROUTE}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
-      },
-    );
+    const response = await $API.privateApi.put(`${ROUTE}`, {});
 
     return response;
   } catch (error) {
