@@ -16,7 +16,7 @@ export const createPost = async (payload) => {
   const ROUTE = `posts`;
   const formData = new FormData();
   payload.content && formData.append("body", payload.content);
-  payload.image && formData.append("image", payload.image);
+  payload.imageFile && formData.append("image", payload.imageFile);
   !payload.privacy
     ? formData.append("privacy", "public")
     : formData.append("privacy", payload.privacy);

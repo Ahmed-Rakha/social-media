@@ -7,32 +7,26 @@ import { $Services } from "../services/services-repository";
 import { useState } from "react";
 
 export default function Home() {
-  const [image, setimage] = useState(undefined);
+  const [image, setimage] = useState(new File([], "default-image.jpg"));
   const { data, error } = useQuery({
     queryKey: ["posts"],
     queryFn: () =>
-      $Services.COMMENTS_REPOSITORY.updateComment(
-        "699741ae056bdb7627ebd99b",
-        "69975656056bdb7627ed1772",
-        {
-          content: "Test update 3 comment From Sayed",
-          imageFile: image,
-        },
-      ),
+      $Services.POSTS_REPOSITORY.updatePost("69976e1a056bdb7627ee718a", {
+        newContent: "Test update  post 15 From Sayed set to number 16",
+        privacy: "public",
+        removeImage: true,
+      }),
   });
 
-  const { mutate } = useMutation({
-    mutationKey: ["like-unlike-comment"],
-    mutationFn: () =>
-      $Services.COMMENTS_REPOSITORY.updateComment(
-        "699741ae056bdb7627ebd99b",
-        "69975656056bdb7627ed1772",
-        {
-          content: "Test update 4 comment From Sayed",
-          imageFile: image,
-        },
-      ),
-  });
+  // const { mutate, data, error } = useMutation({
+  //   mutationKey: ["create-post"],
+  //   mutationFn: () =>
+  //     $Services.POSTS_REPOSITORY.createPost({
+  //       content: "Test create  post 15 From Sayed",
+  //       privacy: "following",
+  //       imageFile: image,
+  //     }),
+  // });
   console.log(data);
   console.log("error message", error);
 
