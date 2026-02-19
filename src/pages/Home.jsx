@@ -9,15 +9,7 @@ export default function Home() {
   const { data, error } = useQuery({
     queryKey: ["posts"],
     queryFn: () =>
-      $Services.AUTH_REPOSITORY.signup({
-        name: "Test Signup",
-        username: "testSignup",
-        email: "testSignup@gmail.com",
-        dateOfBirth: "2000-01-01",
-        gender: "male",
-        password: "Aa@123456",
-        rePassword: "Aa@123456",
-      }),
+      $Services.USER_REPOSITORY.getUserPosts("6994ccea056bdb7627d3f7aa"),
   });
 
   console.log(data);

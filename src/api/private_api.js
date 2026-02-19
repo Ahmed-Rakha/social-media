@@ -7,9 +7,11 @@ export const privateApi = axios.create({
 privateApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("social-app-token");
-    console.log("token", token);
     if (!token) {
-      return Promise.reject(new Error("Token not found!"));
+      const err = new Error();
+      err.status = 401;
+      err.message = "You are not authenticated! Please login first.";
+      return Promise.reject(err);
     }
 
     config.headers.Authorization = `Bearer ${token}`;
@@ -24,10 +26,23 @@ privateApi.interceptors.request.use(
 privateApi.interceptors.response.use(
   (res) => res?.data,
   (error) => {
-    if (error?.response?.status === 401) {
-      localStorage.removeItem("social-app-token");
-      window.location.href = "/signin";
+    if (error.response) {
+      return Promise.reject({
+        data: error.response.data,
+        message: error.response.data?.message || "Server Error!",
+        status: error.response.status,
+        statusText: error.response.statusText,
+      });
+    } else if (error.request) {
+      return Promise.reject({
+        message: `Network Error: No response received from server: ${error.request}`,
+        status: 500,
+      });
+    } else {
+      return Promise.reject({
+        message: error.message,
+        status: error?.status || 500,
+      });
     }
-    return Promise.reject(error);
   },
 );
