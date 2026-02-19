@@ -1,17 +1,17 @@
+// @ts-check
 import { useQuery } from "@tanstack/react-query";
 import { getUserPosts } from "../services/user-auth/user/get_user_posts";
 import { $Utilities } from "../utilities/utilities-repository";
 import { format } from "date-fns";
+import { $Services } from "../services/services-repository";
+
 export default function Home() {
   const { data } = useQuery({
     queryKey: ["posts"],
-    queryFn: () => getUserPosts("698dad303bf973711764b39f"),
+    queryFn: () => $Services.USER_REPOSITORY.uploadProfilePhoto("dad"),
   });
 
-  const date = $Utilities.Dates.displayPostAndCommentDate(
-    "2026-02-13T21:18:41.484Z",
-  );
-  console.log(date);
+  console.log(data);
 
   //  jsObjectDate , tokens dateString
 

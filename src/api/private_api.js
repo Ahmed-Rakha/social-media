@@ -7,7 +7,7 @@ export const privateApi = axios.create({
 privateApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("social-app-token");
-
+    console.log("token", token);
     if (!token) {
       return Promise.reject(new Error("Token not found!"));
     }
@@ -22,11 +22,11 @@ privateApi.interceptors.request.use(
 );
 
 privateApi.interceptors.response.use(
-  (res) => res,
+  (res) => res?.data,
   (error) => {
     if (error?.response?.status === 401) {
       localStorage.removeItem("social-app-token");
-      window.location.reload();
+      window.location.href = "/signin";
     }
     return Promise.reject(error);
   },

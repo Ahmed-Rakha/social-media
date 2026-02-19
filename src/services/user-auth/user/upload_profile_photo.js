@@ -1,31 +1,13 @@
-import axios from "axios";
+import { $API } from "../../../api/axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const TOKEN = localStorage.getItem("token");
-
-export const uploadProfilePhoto = async (image) => {
-  const ROUTE = `users/upload-photo`;
+/**
+ * @param {File} imageFile - The imageFile is required
+ */
+export const uploadProfilePhoto = async (imageFile) => {
+  const ROUTE = `/users/upload-photo`;
   const formData = new FormData();
-  formData.append("photo", image);
+  formData.append("photo", imageFile);
 
-  try {
-    const response = await axios.put(`${BASE_URL}/${ROUTE}`, formData, {
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-      },
-    });
-
-    return response;
-  } catch (error) {
-    if (error.response) {
-      console.log("Server Error", error?.response);
-      throw error;
-    }
-    if (error.request) {
-      console.log("Network Error", error?.request);
-      throw "Network Error: " + error?.request;
-    }
-    console.log("Unknown Error", error?.message);
-    throw error?.message;
-  }
+  const response = await $API.privateApi.put(`${ROUTE}`, formData);
+  return response;
 };
