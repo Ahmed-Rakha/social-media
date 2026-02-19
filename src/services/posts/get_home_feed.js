@@ -1,32 +1,21 @@
-import axios from "axios";
+import { $API } from "../../api/axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const TOKEN = localStorage.getItem("token");
-
+/**
+ * @param {{only?: "following", limit?: number}} [queryParams] - The queryParams is optional
+ */
 export const getHomeFeed = async (queryParams) => {
   const ROUTE = `posts/feed`;
+  const finalParams = {
+    only: "following",
+    limit: 10,
+    ...queryParams,
+  };
 
-  try {
-    const response = await axios.get(`${BASE_URL}/${ROUTE}`, {
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-      },
-      params: {
-        ...queryParams,
-      },
-    });
+  const response = await $API.privateApi.get(`${ROUTE}`, {
+    params: {
+      ...finalParams,
+    },
+  });
 
-    return response;
-  } catch (error) {
-    if (error.response) {
-      console.log("Server Error", error?.response);
-      throw error;
-    }
-    if (error.request) {
-      console.log("Network Error", error?.request);
-      throw "Network Error: " + error?.request;
-    }
-    console.log("Unknown Error", error?.message);
-    throw error?.message;
-  }
+  return response;
 };

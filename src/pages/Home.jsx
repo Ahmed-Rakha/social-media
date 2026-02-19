@@ -9,7 +9,12 @@ export default function Home() {
   const { data, error } = useQuery({
     queryKey: ["posts"],
     queryFn: () =>
-      $Services.USER_REPOSITORY.getUserPosts("6994ccea056bdb7627d3f7aa"),
+      $Services.POSTS_REPOSITORY.updatePost("69974101056bdb7627ebd8f5", {
+        newContent: "new content 2 send from endpoint",
+        imageFile: undefined,
+        removeImage: true,
+        privacy: "following",
+      }),
   });
 
   console.log(data);
@@ -32,3 +37,6 @@ export default function Home() {
 //         gender: "male",
 //         password: "Aa@123456",
 //         rePassword: "Aa@123456",
+
+// username: "sayed2@sayed.com",
+// password: "Sayed@sayed1234",

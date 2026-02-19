@@ -1,29 +1,11 @@
-import axios from "axios";
+import { $API } from "../../api/axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-const TOKEN = localStorage.getItem("token");
-
+/**
+ * @param {string} postId - The postId is required
+ */
 export const deletePost = async (postId) => {
   const ROUTE = `posts/${postId}`;
 
-  try {
-    const response = await axios.delete(`${BASE_URL}/${ROUTE}`, {
-      headers: {
-        Authorization: `Bearer ${TOKEN}`,
-      },
-    });
-
-    return response;
-  } catch (error) {
-    if (error.response) {
-      console.log("Server Error", error?.response);
-      throw error;
-    }
-    if (error.request) {
-      console.log("Network Error", error?.request);
-      throw "Network Error: " + error?.request;
-    }
-    console.log("Unknown Error", error?.message);
-    throw error?.message;
-  }
+  const response = await $API.privateApi.delete(`${ROUTE}`);
+  return response;
 };
