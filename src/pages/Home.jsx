@@ -6,12 +6,22 @@ import { format } from "date-fns";
 import { $Services } from "../services/services-repository";
 
 export default function Home() {
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["posts"],
-    queryFn: () => $Services.USER_REPOSITORY.uploadProfilePhoto("dad"),
+    queryFn: () =>
+      $Services.AUTH_REPOSITORY.signup({
+        name: "Test Signup",
+        username: "testSignup",
+        email: "testSignup@gmail.com",
+        dateOfBirth: "2000-01-01",
+        gender: "male",
+        password: "Aa@123456",
+        rePassword: "Aa@123456",
+      }),
   });
 
   console.log(data);
+  console.log("error message", error);
 
   //  jsObjectDate , tokens dateString
 

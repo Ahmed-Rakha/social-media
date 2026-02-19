@@ -1,28 +1,11 @@
-import axios from "axios";
+import { $API } from "../../../api/axios";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
+/**
+ * @param {{name:string, username?:string, email:string, dateOfBirth:string, gender:string, password:string, rePassword:string}} payload - The payload is required
+ */
 export const signup = async (payload) => {
-  const ROUTE = `users/signup`;
+  const ROUTE = `/users/signup`;
 
-  try {
-    const response = await axios.post(`${BASE_URL}/${ROUTE}`, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    return response;
-  } catch (error) {
-    if (error.response) {
-      console.log("Server Error", error?.response);
-      throw error;
-    }
-    if (error.request) {
-      console.log("Network Error", error?.request);
-      throw "Network Error: " + error?.request;
-    }
-    console.log("Unknown Error", error?.message);
-    throw error?.message;
-  }
+  const response = await $API.publicApi.post(`${ROUTE}`, payload);
+  return response;
 };
