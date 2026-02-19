@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router";
-import bgImage from "../../assets/images/signup-bg-DGRfriy9.png";
-import image from "../../assets/images/avatar-generations_rpge.jpg";
+import bgImage from "../../../assets/images/signup-bg-DGRfriy9.png";
+import image from "../../../assets/images/avatar-generations_rpge.jpg";
 import {
   Button,
   DatePicker,
@@ -12,10 +12,10 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { parseDate } from "@internationalized/date";
-import { signupSchemaValidation } from "../../schemas/validations/auth/signup_schema";
+import { signupSchemaValidation } from "../../../schemas/validations/auth/signup_schema";
 import { useMutation } from "@tanstack/react-query";
-import { $Services } from "../../services/services-repository";
-import { $Utilities } from "../../utilities/utilities-repository";
+import { $Services } from "../../../services/services-repository";
+import { $Utilities } from "../../../utilities/utilities-repository";
 
 export default function Signup() {
   const navigate = useNavigate();

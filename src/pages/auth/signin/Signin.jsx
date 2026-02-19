@@ -1,14 +1,14 @@
 import { Link, useNavigate } from "react-router";
-import bgImage from "../../assets/images/signup-bg-DGRfriy9.png";
-import image from "../../assets/images/avatar-generations_rpge.jpg";
+import bgImage from "../../../assets/images/signup-bg-DGRfriy9.png";
+import image from "../../../assets/images/avatar-generations_rpge.jpg";
 import { Form, Input } from "@heroui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import AppButton from "../../components/shared-components/appbutton/AppButton";
-import { signinSchemaValidation } from "../../schemas/validations/auth/signin_schema";
+import AppButton from "../../../components/shared-components/appbutton/AppButton";
+import { signinSchemaValidation } from "../../../schemas/validations/auth/signin_schema";
 import { useMutation } from "@tanstack/react-query";
-import { $Services } from "../../services/services-repository";
-import { $Utilities } from "../../utilities/utilities-repository";
+import { $Services } from "../../../services/services-repository";
+import { $Utilities } from "../../../utilities/utilities-repository";
 export default function Signin() {
   const navigate = useNavigate();
 
