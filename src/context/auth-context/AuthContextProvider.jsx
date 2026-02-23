@@ -1,48 +1,59 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { $Services } from "../../services/services-repository";
-import { Navigate, useLocation, useNavigate } from "react-router";
 import { $Utilities } from "../../utilities/utilities-repository";
-import { fa } from "zod/v4/locales";
 
 const AuthContext = createContext();
 export default function AuthContextProvider({ children }) {
   const [socialAppToken, setSocialAppToken] = useState(
     () => localStorage.getItem("social-app-token") || null,
   );
-  const [profileData, setProfileData] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const isAuthenticated = !!socialAppToken;
 
   function logout() {
     setSocialAppToken(null);
-    setProfileData(null);
+    setUserProfile(null);
     localStorage.removeItem("social-app-token");
   }
 
   useEffect(() => {
     async function fetchProfile() {
       if (!socialAppToken) {
-        setProfileData(null);
+        setUserProfile(null);
         setIsLoading(false);
         return;
       }
-      if (!profileData) {
-        try {
-          const { data } = await $Services.USER_REPOSITORY.getMyProfile();
-          setProfileData(data || null);
-        } catch (err) {
-          logout();
-          $Utilities.Alerts.displayError(
-            new Error("Session expired. Please log in again.", { cause: err }),
-          );
-        } finally {
-          setIsLoading(false);
-        }
+
+      try {
+        const [user, unreadCount] = await Promise.allSettled([
+          $Services.USER_REPOSITORY.getMyProfile(),
+          $Services.NOTIFICATIONS_REPOSITORY.getUnreadCount(),
+        ]);
+        const userResult = {
+          ...user.value.data.user,
+          unreadCount: unreadCount.value.data.unreadCount || 0,
+        };
+
+        console.log(
+          "Fetched user profile:",
+          userResult,
+          "Unread notifications count:",
+          unreadCount.value,
+        );
+        setUserProfile(userResult || null);
+      } catch (err) {
+        logout();
+        $Utilities.Alerts.displayError(
+          new Error("Session expired. Please log in again.", { cause: err }),
+        );
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchProfile();
-  }, [socialAppToken, profileData]);
+  }, [socialAppToken]);
 
   useEffect(() => {
     if (socialAppToken)
@@ -55,8 +66,8 @@ export default function AuthContextProvider({ children }) {
       value={{
         socialAppToken,
         setSocialAppToken,
-        profileData,
-        setProfileData,
+        userProfile,
+        setUserProfile,
         isAuthenticated,
         isLoading,
         logout,
@@ -68,7 +79,7 @@ export default function AuthContextProvider({ children }) {
 }
 // Custom hook to use the AuthContext
 /**
- * @returns {{ socialAppToken: string | null, setSocialAppToken: () => void, profileData: any, setProfileData: () => void, isAuthenticated: boolean, logout: () => void }} An object containing the authentication token and a function to update it.
+ * @returns {{ socialAppToken: string | null, setSocialAppToken: () => void, userProfile: any, setUserProfile: () => void, isAuthenticated: boolean, logout: () => void }} An object containing the authentication token and a function to update it.
  */
 export function useAuth() {
   const context = useContext(AuthContext);

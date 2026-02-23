@@ -8,12 +8,15 @@ import {
   Dropdown,
   DropdownMenu,
   Avatar,
+  user,
 } from "@heroui/react";
 import { Link, NavLink } from "react-router";
 import { useAuth } from "../../context/auth-context/AuthContextProvider";
+import avatarFallback from "../../assets/images/avatar-generations_rpge.jpg";
 
 export default function MainNavBar() {
-  const { logout } = useAuth();
+  const { logout, userProfile } = useAuth();
+  console.log("userProfile in MainNavBar:", userProfile);
   return (
     <Navbar isBordered variant="floating" className="bg-white py-3 mb-6">
       <NavbarBrand>
@@ -64,8 +67,10 @@ export default function MainNavBar() {
             >
               <div className="relative">
                 <i className="fa-regular fa-bell"></i>
-                <span className="absolute bottom-4 right-2 bg-red-500 text-white rounded-full p-3 min-w-5 max-w-fit h-5 text-xs flex items-center justify-center">
-                  0
+                <span className="absolute bottom-4 right-2 bg-red-500 text-white rounded-full px-2 min-w-6 max-w-fit h-6 text-xs flex items-center justify-center">
+                  {userProfile?.unreadCount > 99
+                    ? "99+"
+                    : userProfile?.unreadCount || 0}
                 </span>
               </div>
               <span className="hidden sm:flex">Notifications</span>
@@ -82,12 +87,17 @@ export default function MainNavBar() {
                 isBordered
                 className="transition-transform"
                 color="secondary"
-                name="Jason Hughes"
+                name={userProfile?.name || "User"}
                 size="sm"
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                src={
+                  userProfile?.photo &&
+                  !userProfile?.photo.includes("undefined")
+                    ? userProfile?.photo
+                    : avatarFallback
+                }
               />
               <span className="hidden md:block ms-1 sm:text-[12px] lg:text-md font-medium">
-                Jason Hughes
+                {userProfile?.name}
               </span>
               <i className="fa-solid fa-bars"></i>
             </button>

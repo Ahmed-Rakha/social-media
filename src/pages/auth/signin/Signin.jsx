@@ -11,7 +11,7 @@ import { $Services } from "../../../services/services-repository";
 import { $Utilities } from "../../../utilities/utilities-repository";
 import { $Contexts } from "../../../context/context-repository";
 export default function Signin() {
-  const { setSocialAppToken, setProfileData } = $Contexts.useAuth();
+  const { setSocialAppToken } = $Contexts.useAuth();
 
   const {
     handleSubmit,
@@ -34,7 +34,7 @@ export default function Signin() {
       // navigate(from, { replace: true }); --- IGNORE since the cpt will rerender and the user will be redirected from the GuestRoute---
       $Utilities.Alerts.displaySuccess("Login successfully!");
       setSocialAppToken(data.token || null);
-      setProfileData(data.user || null);
+      // setUserProfile(data.user || null); --- IGNORE since the profile will be fetched in the AuthContextProvider after setting the token---
     },
     onError: (error) => {
       $Utilities.Alerts.displayError(error);
