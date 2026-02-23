@@ -24,7 +24,7 @@ privateApi.interceptors.request.use(
 );
 
 privateApi.interceptors.response.use(
-  (res) => res?.data,
+  (res) => res?.data?.data || res?.data || res,
   (error) => {
     if (error.response) {
       return Promise.reject({

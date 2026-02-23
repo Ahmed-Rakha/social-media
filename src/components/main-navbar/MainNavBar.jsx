@@ -8,15 +8,25 @@ import {
   Dropdown,
   DropdownMenu,
   Avatar,
-  user,
 } from "@heroui/react";
 import { Link, NavLink } from "react-router";
 import { useAuth } from "../../context/auth-context/AuthContextProvider";
 import avatarFallback from "../../assets/images/avatar-generations_rpge.jpg";
+import { useQuery } from "@tanstack/react-query";
+import { $Services } from "../../services/services-repository";
 
 export default function MainNavBar() {
   const { logout, userProfile } = useAuth();
-  console.log("userProfile in MainNavBar:", userProfile);
+
+  const {
+    data: unreadNotificationsData,
+    isLoading: unreadNotificationsLoading,
+  } = useQuery({
+    queryKey: ["unreadNotificationsCount"],
+    queryFn: () => $Services.NOTIFICATIONS_REPOSITORY.getUnreadCount(),
+  });
+  console.log("unreadNotificationsData:", unreadNotificationsData);
+
   return (
     <Navbar isBordered variant="floating" className="bg-white py-3 mb-6">
       <NavbarBrand>
@@ -68,9 +78,9 @@ export default function MainNavBar() {
               <div className="relative">
                 <i className="fa-regular fa-bell"></i>
                 <span className="absolute bottom-4 right-2 bg-red-500 text-white rounded-full px-2 min-w-6 max-w-fit h-6 text-xs flex items-center justify-center">
-                  {userProfile?.unreadCount > 99
+                  {unreadNotificationsData?.unreadCount > 99
                     ? "99+"
-                    : userProfile?.unreadCount || 0}
+                    : unreadNotificationsData?.unreadCount || 0}
                 </span>
               </div>
               <span className="hidden sm:flex">Notifications</span>

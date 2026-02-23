@@ -48,8 +48,8 @@ export default function Signup() {
       $Utilities.Alerts.displaySuccess(
         "Your account has been created successfully!",
       );
-      localStorage.setItem("social-app-token", response.data.token);
-      setSocialAppToken();
+      localStorage.setItem("social-app-token", response.token);
+      setSocialAppToken(response.token);
       navigate("/feed");
     },
     onError: (error) => {

@@ -27,26 +27,19 @@ export default function AuthContextProvider({ children }) {
       }
 
       try {
-        const [user, unreadCount] = await Promise.allSettled([
-          $Services.USER_REPOSITORY.getMyProfile(),
-          $Services.NOTIFICATIONS_REPOSITORY.getUnreadCount(),
-        ]);
-        const userResult = {
-          ...user.value.data.user,
-          unreadCount: unreadCount.value.data.unreadCount || 0,
-        };
-
-        console.log(
-          "Fetched user profile:",
-          userResult,
-          "Unread notifications count:",
-          unreadCount.value,
-        );
-        setUserProfile(userResult || null);
+        const {
+          value: { user },
+        } = (
+          await Promise.allSettled([$Services.USER_REPOSITORY.getMyProfile()])
+        )[0];
+        console.log("User profile fetch result:", user);
+        setUserProfile(user || null);
       } catch (err) {
         logout();
         $Utilities.Alerts.displayError(
-          new Error("Session expired. Please log in again.", { cause: err }),
+          new Error("An Error occurred while fetching user profile.", {
+            cause: err,
+          }),
         );
       } finally {
         setIsLoading(false);
