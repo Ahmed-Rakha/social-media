@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation } from "react-router";
 import bgImage from "../../../assets/images/signup-bg-DGRfriy9.png";
 import image from "../../../assets/images/avatar-generations_rpge.jpg";
 import { Form, Input } from "@heroui/react";
@@ -9,8 +9,9 @@ import { signinSchemaValidation } from "../../../schemas/validations/auth/signin
 import { useMutation } from "@tanstack/react-query";
 import { $Services } from "../../../services/services-repository";
 import { $Utilities } from "../../../utilities/utilities-repository";
+import { $Contexts } from "../../../context/context-repository";
 export default function Signin() {
-  const navigate = useNavigate();
+  const { setSocialAppToken, setProfileData } = $Contexts.useAuth();
 
   const {
     handleSubmit,
@@ -24,16 +25,16 @@ export default function Signin() {
     mode: "all",
     resolver: zodResolver(signinSchemaValidation),
   });
-  console.log("from react hook form", errors);
   function onSubmit(payload) {
     mutate(payload);
   }
-
   const { mutate, isPending } = useMutation({
     mutationFn: (payload) => $Services.AUTH_REPOSITORY.signin(payload),
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
+      // navigate(from, { replace: true }); --- IGNORE since the cpt will rerender and the user will be redirected from the GuestRoute---
       $Utilities.Alerts.displaySuccess("Login successfully!");
-      navigate("/feed");
+      setSocialAppToken(data.token || null);
+      setProfileData(data.user || null);
     },
     onError: (error) => {
       $Utilities.Alerts.displayError(error);

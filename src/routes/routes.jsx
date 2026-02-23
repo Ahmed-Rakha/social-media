@@ -1,47 +1,81 @@
-import { createBrowserRouter } from "react-router";
-import Home from "../pages/Home";
+import { createBrowserRouter, Navigate } from "react-router";
 
 import RootLayout from "../layouts/RootLayout";
 import Signin from "../pages/auth/signin/Signin";
 import Signup from "../pages/auth/signup/Signup";
 import FeedPage from "../pages/feed/FeedPage";
+import NotificationsPage from "../pages/notifications/NotificationsPage";
+import ProtectedRoute from "./ProtectedRoute";
+import PostDetailsPage from "../pages/post-details/PostDetailsPage";
+import MyProfilePage from "../pages/profile/my-profile/MyProfilePage";
+import UserProfilePage from "../pages/profile/user-profile/UserProfilePage";
+import ChangePasswordPage from "../pages/auth/change-passowrd/ChangePasswordPage";
+import SuggestionsPage from "../pages/suggestions/SuggestionsPage";
+import GuestRoute from "./GuestRoute";
 
 export const routes = createBrowserRouter([
   {
     path: "/signin",
-    element: <Signin />,
+    element: (
+      <GuestRoute>
+        <Signin />
+      </GuestRoute>
+    ),
   },
   {
     path: "/signup",
-    element: <Signup />,
+    element: (
+      <GuestRoute>
+        <Signup />
+      </GuestRoute>
+    ),
   },
   {
     path: "/change-password",
-    element: <h1>Change Password</h1>,
-  },
-  {
-    path: "/profile",
-    element: <h1>My Profile </h1>,
-  },
-  {
-    path: "/profile/:userId",
-    element: <h1>User Profile </h1>,
+    element: (
+      <ProtectedRoute>
+        <ChangePasswordPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/suggestions",
-    element: <h1>Suggestions</h1>,
+    element: (
+      <ProtectedRoute>
+        <SuggestionsPage />
+      </ProtectedRoute>
+    ),
   },
 
   {
     path: "/",
-    element: <RootLayout />,
-
+    element: (
+      <ProtectedRoute>
+        <RootLayout />
+      </ProtectedRoute>
+    ),
     children: [
+      // { index: true, element: <Navigate to="/feed" replace /> },
       {
-        path: ":postId",
-        element: <h1>post details</h1>,
+        path: "posts/:postId",
+        element: <PostDetailsPage />,
       },
-
+      {
+        path: "notifications",
+        element: <NotificationsPage />,
+      },
+      {
+        path: "profile",
+        element: <MyProfilePage />,
+      },
+      {
+        path: "profile/:userId",
+        element: <UserProfilePage />,
+      },
+      {
+        path: "settings",
+        element: <h1>Settings</h1>,
+      },
       {
         path: "/feed",
         element: <FeedPage />,

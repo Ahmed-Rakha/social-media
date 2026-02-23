@@ -1,0 +1,111 @@
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  DropdownItem,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  Avatar,
+} from "@heroui/react";
+import { Link, NavLink } from "react-router";
+import { useAuth } from "../../context/auth-context/AuthContextProvider";
+
+export default function MainNavBar() {
+  const { logout } = useAuth();
+  return (
+    <Navbar isBordered variant="floating" className="bg-white py-3 mb-6">
+      <NavbarBrand>
+        {/* <AcmeLogo /> */}
+        <p className="font-bold text-inherit text-md lg:text-2xl">
+          <span className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-blue-400 bg-clip-text text-transparent">
+            Social
+          </span>
+          <span className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-blue-500 bg-clip-text text-transparent">
+            App
+          </span>
+        </p>
+      </NavbarBrand>
+
+      <NavbarContent
+        justify="center"
+        className="flex gap-5 lg:gap-8 ms-4 md:ms-0 me-0 md:me-20  lg:me-12 xxl:me-35 lg:ms-0"
+      >
+        <div className="bg-gray-100 rounded-xl px-5  lg:px-8 py-5 flex gap-4 lg:gap-9 items-center">
+          <NavbarItem className="flex items-center gap-0 lg:gap-2 font-semibold ">
+            <NavLink
+              to="feed"
+              className={({ isActive }) =>
+                `flex items-center gap-2 ${isActive ? "text-primary" : ""}`
+              }
+            >
+              <i className="fa-regular fa-house"></i>
+              <span className="hidden sm:flex">Feed</span>
+            </NavLink>
+          </NavbarItem>
+          <NavbarItem className="flex items-center gap-0 lg:gap-2 font-semibold">
+            <NavLink
+              to="profile"
+              className={({ isActive }) =>
+                `flex items-center gap-2 ${isActive ? "text-primary" : ""}`
+              }
+            >
+              <i className="fa-regular fa-user"></i>
+              <span className="hidden sm:flex">Profile</span>
+            </NavLink>
+          </NavbarItem>
+          <NavbarItem className="flex items-center gap-0 lg:gap-2 font-semibold">
+            <NavLink
+              to="notifications"
+              className={({ isActive }) =>
+                `flex items-center gap-2 ${isActive ? "text-primary" : ""}`
+              }
+            >
+              <div className="relative">
+                <i className="fa-regular fa-bell"></i>
+                <span className="absolute bottom-4 right-2 bg-red-500 text-white rounded-full p-3 min-w-5 max-w-fit h-5 text-xs flex items-center justify-center">
+                  0
+                </span>
+              </div>
+              <span className="hidden sm:flex">Notifications</span>
+            </NavLink>
+          </NavbarItem>
+        </div>
+      </NavbarContent>
+
+      <NavbarContent as="div" justify="end">
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+            <button className="flex items-center gap-2 cursor-pointer">
+              <Avatar
+                isBordered
+                className="transition-transform"
+                color="secondary"
+                name="Jason Hughes"
+                size="sm"
+                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              />
+              <span className="hidden md:block ms-1 sm:text-[12px] lg:text-md font-medium">
+                Jason Hughes
+              </span>
+              <i className="fa-solid fa-bars"></i>
+            </button>
+          </DropdownTrigger>
+
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem key="profile" as={Link} to="/profile">
+              Profile
+            </DropdownItem>
+            <DropdownItem key="settings" as={Link} to="/settings">
+              Settings
+            </DropdownItem>
+            <DropdownItem key="logout" color="danger" onPress={logout}>
+              Log Out
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>
+    </Navbar>
+  );
+}

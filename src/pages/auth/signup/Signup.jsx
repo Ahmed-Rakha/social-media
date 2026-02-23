@@ -16,8 +16,10 @@ import { signupSchemaValidation } from "../../../schemas/validations/auth/signup
 import { useMutation } from "@tanstack/react-query";
 import { $Services } from "../../../services/services-repository";
 import { $Utilities } from "../../../utilities/utilities-repository";
+import { $Contexts } from "../../../context/context-repository";
 
 export default function Signup() {
+  const { setSocialAppToken } = $Contexts.useAuth();
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -42,10 +44,12 @@ export default function Signup() {
   }
   const { mutate, isPending } = useMutation({
     mutationFn: (payload) => $Services.AUTH_REPOSITORY.signup(payload),
-    onSuccess: () => {
+    onSuccess: (response) => {
       $Utilities.Alerts.displaySuccess(
         "Your account has been created successfully!",
       );
+      localStorage.setItem("social-app-token", response.data.token);
+      setSocialAppToken();
       navigate("/feed");
     },
     onError: (error) => {

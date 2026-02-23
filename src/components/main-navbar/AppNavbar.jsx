@@ -15,12 +15,12 @@ import {
 } from "@heroui/react";
 import { useState } from "react";
 import { Link, NavLink } from "react-router";
-import image from "../../assets/me.jpg";
-import { Moon, Personalcard, Sun1 } from "iconsax-reactjs";
+import image from "../../assets/images/me.jpg";
+// import { Moon, Personalcard, Sun1 } from "iconsax-reactjs";
 import classNames from "classnames";
 import { useAudioPlayer } from "react-use-audio-player";
 import { useEffect } from "react";
-import mySound from "/public/audio/register-audio.mp3";
+// import mySound from "/public/audio/register-audio.mp3";
 import { useLocation } from "react-router";
 
 export default function AppNavbar() {
@@ -38,6 +38,13 @@ export default function AppNavbar() {
     audio.load(mySound);
   }, []);
 
+  function handlePlay() {
+    audio.play();
+  }
+
+  function handlePause() {
+    audio.pause();
+  }
   useEffect(() => {
     // if isDarkMode is true add dark class to html element else remove it
     document.documentElement.classList.toggle("dark", isDarkMode);
@@ -47,14 +54,6 @@ export default function AppNavbar() {
 
   function toggleDarkMode() {
     setIsDarkMode((prev) => !prev);
-  }
-
-  function handlePlay() {
-    audio.play();
-  }
-
-  function handlePause() {
-    audio.pause();
   }
 
   isDarkMode ? handlePlay() : handlePause();
@@ -126,7 +125,7 @@ export default function AppNavbar() {
         >
           <Sun1 size="20" color="#FFF" variant="Outline" />
         </button>
-        
+
         {/* Button to light mode */}
         <button
           className={classNames(
@@ -159,7 +158,7 @@ export default function AppNavbar() {
           )}
         </NavbarMenuItem>
       </NavbarMenu>
-      
+
       {token && (
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
