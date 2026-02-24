@@ -79,9 +79,9 @@ export default function MainNavBar() {
               <div className="relative">
                 <i className="fa-regular fa-bell"></i>
                 <span className="absolute bottom-4 right-2 bg-red-500 text-white rounded-full px-2 min-w-6 max-w-fit h-6 text-xs flex items-center justify-center">
-                  {unreadNotificationsData?.unreadCount > 99
+                  {unreadNotificationsData?.data?.unreadCount > 99
                     ? "99+"
-                    : unreadNotificationsData?.unreadCount || 0}
+                    : unreadNotificationsData?.data?.unreadCount || 0}
                 </span>
               </div>
               <span className="hidden sm:flex">Notifications</span>

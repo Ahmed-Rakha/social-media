@@ -44,12 +44,12 @@ export default function Signup() {
   }
   const { mutate, isPending } = useMutation({
     mutationFn: (payload) => $Services.AUTH_REPOSITORY.signup(payload),
-    onSuccess: (response) => {
+    onSuccess: ({ data }) => {
       $Utilities.Alerts.displaySuccess(
         "Your account has been created successfully!",
       );
-      localStorage.setItem("social-app-token", response.token);
-      setSocialAppToken(response.token);
+      localStorage.setItem("social-app-token", data.token);
+      setSocialAppToken(data.token);
       navigate("/feed");
     },
     onError: (error) => {

@@ -1,5 +1,5 @@
 import avatar from "../../../assets/images/avatar-generations_rpge.jpg";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { $Utilities } from "../../../utilities/utilities-repository";
 import {
   useIsMutating,
@@ -31,27 +31,46 @@ export default function NotificationCard({ notificationData }) {
       await queryClient.cancelQueries({
         queryKey: $QUERY_KEYS.notifications.all,
       });
-      const previousNotifications = queryClient.getQueryData({
-        queryKey: $QUERY_KEYS.notifications.all,
+
+      await queryClient.cancelQueries({
+        queryKey: $QUERY_KEYS.notifications.unreadCount,
       });
+      const previousAll = queryClient.getQueryData(
+        $QUERY_KEYS.notifications.all,
+      );
+      const previousUnreadCount = queryClient.getQueryData(
+        $QUERY_KEYS.notifications.unreadCount,
+      );
+
       queryClient.setQueryData($QUERY_KEYS.notifications.all, (oldData) => {
         if (!oldData) return oldData;
 
         return {
           ...oldData,
-          notifications: oldData.notifications.map((notification) => {
-            if (notification._id === notificationId) {
-              return { ...notification, isRead: true };
-            }
-            return notification;
-          }),
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            data: {
+              ...page.data,
+              notifications: page.data.notifications.map((n) =>
+                n._id === notificationId ? { ...n, isRead: true } : n,
+              ),
+            },
+          })),
         };
       });
-      return { previousNotifications };
+
+      queryClient.setQueryData($QUERY_KEYS.notifications.unreadCount, (old) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          unreadCount: Math.max(0, old.unreadCount - 1),
+        };
+      });
+      return { previousAll, previousUnreadCount };
     },
 
     onSettled: () => {
-      console.log("From onSettled");
       queryClient.invalidateQueries({
         queryKey: $QUERY_KEYS.notifications.unreadCount,
       });
@@ -61,11 +80,16 @@ export default function NotificationCard({ notificationData }) {
     },
 
     onError: (error, variables, context) => {
-      console.log("From error", error, variables, context);
       queryClient.setQueryData(
         $QUERY_KEYS.notifications.all,
-        context.previousNotifications,
+        context.previousAll,
       );
+
+      queryClient.setQueryData(
+        $QUERY_KEYS.notifications.unreadCount,
+        context.previousUnreadCount,
+      );
+
       $Utilities.Alerts.displayError(error);
     },
   });
@@ -96,7 +120,7 @@ export default function NotificationCard({ notificationData }) {
             notificationData?.entityId || notificationData?.entity?._id,
           );
         }}
-        className="bg-blue-100 p-4  rounded-xl "
+        className="bg-blue-100 p-5  rounded-2xl shadow-md cursor-pointer border-1 border-blue-300 hover:bg-blue-200 hover:shadow-lg transition duration-300 ease-in-out"
       >
         <div className="flex justify-between">
           <div className="flex gap-4">
@@ -104,7 +128,7 @@ export default function NotificationCard({ notificationData }) {
               onClick={(event) =>
                 navigateToProfile(event, notificationData?.actor?._id)
               }
-              className="w-10 h-10 rounded-full overflow-hidden cursor-pointer"
+              className="w-10 h-10 rounded-full overflow-hidden cursor-pointer border-1 border-blue-300 flex items-center justify-center"
             >
               <img
                 src={notificationData?.actor?.photo || avatar}
