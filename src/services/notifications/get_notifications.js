@@ -18,7 +18,6 @@ import { $API } from "../../api/axios";
 export const getNotifications = async (queryParams) => {
   const ROUTE = `notifications`;
   const finalParams = {
-    unread: false,
     page: 1,
     limit: 10,
     ...queryParams,
@@ -28,5 +27,6 @@ export const getNotifications = async (queryParams) => {
       ...finalParams,
     },
   });
+
   return response;
 };

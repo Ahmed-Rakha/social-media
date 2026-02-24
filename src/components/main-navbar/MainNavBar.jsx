@@ -14,6 +14,7 @@ import { useAuth } from "../../context/auth-context/AuthContextProvider";
 import avatarFallback from "../../assets/images/avatar-generations_rpge.jpg";
 import { useQuery } from "@tanstack/react-query";
 import { $Services } from "../../services/services-repository";
+import { $QUERY_KEYS } from "../../query-keys/queryKeys";
 
 export default function MainNavBar() {
   const { logout, userProfile } = useAuth();
@@ -22,13 +23,13 @@ export default function MainNavBar() {
     data: unreadNotificationsData,
     isLoading: unreadNotificationsLoading,
   } = useQuery({
-    queryKey: ["unreadNotificationsCount"],
+    queryKey: $QUERY_KEYS.notifications.unreadCount ,
     queryFn: () => $Services.NOTIFICATIONS_REPOSITORY.getUnreadCount(),
   });
   console.log("unreadNotificationsData:", unreadNotificationsData);
 
   return (
-    <Navbar isBordered variant="floating" className="bg-white py-3 mb-6">
+    <Navbar isBordered variant="floating" className="bg-white py-3 ">
       <NavbarBrand>
         {/* <AcmeLogo /> */}
         <p className="font-bold text-inherit text-md lg:text-2xl">
