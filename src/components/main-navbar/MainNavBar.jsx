@@ -23,7 +23,7 @@ export default function MainNavBar() {
     data: unreadNotificationsData,
     isLoading: unreadNotificationsLoading,
   } = useQuery({
-    queryKey: $QUERY_KEYS.notifications.unreadCount ,
+    queryKey: $QUERY_KEYS.notifications.unreadCount,
     queryFn: () => $Services.NOTIFICATIONS_REPOSITORY.getUnreadCount(),
   });
   console.log("unreadNotificationsData:", unreadNotificationsData);
@@ -97,9 +97,9 @@ export default function MainNavBar() {
               <Avatar
                 isBordered
                 className="transition-transform"
-                color="secondary"
+                color=""
                 name={userProfile?.name || "User"}
-                size="sm"
+                size="md"
                 src={
                   userProfile?.photo &&
                   !userProfile?.photo.includes("undefined")
