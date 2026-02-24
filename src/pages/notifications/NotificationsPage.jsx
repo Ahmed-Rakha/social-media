@@ -1,24 +1,37 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import NotificationCard from "../../components/notification/notification-card/NotificationCard";
 import { Divider, Tooltip } from "@heroui/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { $QUERY_KEYS } from "../../query-keys/queryKeys";
 import { $Services } from "../../services/services-repository";
 import { $Utilities } from "../../utilities/utilities-repository";
 import NotificationSkeleton from "../../components/shared-components/skeletons/NotificationSkeleton";
 import SmallSpinner from "../../components/shared-components/spinners/SmallSpinner";
+import ShowMoreButton from "../../components/shared-components/buttons/ShowMoreButton";
 
 export default function NotificationsPage() {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState("all");
 
   // Fetch all notifications / unread notifications
-  /* Update : They removed the queryParam unread from Backend but 
-  I will keep the logic as it in case they back it again in the future and will filter on the frontend
-  */
-  const { data: notifications, isPending: isNotificationsLoading } = useQuery({
-    queryKey: $QUERY_KEYS.notifications[filter],
-    queryFn: () => $Services.NOTIFICATIONS_REPOSITORY.getNotifications(),
+  const {
+    isFetchingNextPage,
+    data: notifications,
+    isPending: isNotificationsLoading,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryKey: $QUERY_KEYS.notifications.all,
+    queryFn: ({ pageParam: page = 1 }) =>
+      $Services.NOTIFICATIONS_REPOSITORY.getNotifications({ page }),
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = lastPage?.meta?.pagination?.nextPage ?? undefined;
+      return nextPage;
+    },
   });
 
   // Fetch unread count
@@ -59,7 +72,7 @@ export default function NotificationsPage() {
           </div>
           <Tooltip
             content={
-              unreadData?.unreadCount == 0
+              unreadData?.data?.unreadCount == 0
                 ? "No unread notifications"
                 : "Mark all as read"
             }
@@ -69,9 +82,9 @@ export default function NotificationsPage() {
               disabled={
                 isMarkAllAsReadPending ||
                 isNotificationsLoading ||
-                unreadData?.unreadCount == 0
+                unreadData?.data?.unreadCount == 0
               }
-              className={`bg-neutral-100 text-neutral-600  text-md rounded-md px-3 py-2 flex items-center justify-center md:justify-start gap-1 hover:bg-neutral-200 ${isNotificationsLoading || isMarkAllAsReadPending || unreadData?.unreadCount == 0 ? "cursor-not-allowed" : "cursor-pointer"}`}
+              className={`bg-neutral-100 text-neutral-600  text-md rounded-md px-3 py-2 flex items-center justify-center md:justify-start gap-1 hover:bg-neutral-200 ${isNotificationsLoading || isMarkAllAsReadPending || unreadData?.data?.unreadCount == 0 ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               <i className="fa-solid fa-check-double"></i>
               <span className="font-bold">Mark all as read</span>
@@ -99,7 +112,9 @@ export default function NotificationsPage() {
               <span
                 className={`${filter === "unread" ? "bg-indigo-400 text-white" : "bg-indigo-500 text-white"}  font-bold text-sm rounded-full size-8  flex items-center justify-center  text-neutral-100 `}
               >
-                {unreadData?.unreadCount > 99 ? "99+" : unreadData?.unreadCount}
+                {unreadData?.data?.unreadCount > 99
+                  ? "99+"
+                  : unreadData?.data?.unreadCount}
               </span>
             )}
           </button>
@@ -109,32 +124,54 @@ export default function NotificationsPage() {
       <div className="container bg-white rounded-b-3xl p-6 flex flex-col gap-4 ">
         {isNotificationsLoading ? (
           [...Array(10)].map((_, index) => <NotificationSkeleton key={index} />)
-        ) : notifications?.notifications?.length === 0 ? (
+        ) : notifications?.pages?.flatMap((page) => page.data.notifications)
+            .length === 0 ? (
           <p className="text-center text-neutral-500">
             No notifications found.
           </p>
         ) : filter === "all" ? (
-          notifications?.notifications?.map((notification) => (
-            <NotificationCard
-              key={notification._id}
-              notificationData={notification}
-            />
-          ))
-        ) : notifications?.notifications?.filter(
-            (notification) => notification.isRead === false,
-          ).length === 0 ? (
+          <>
+            {notifications?.pages?.map((page, pageIndex) => (
+              <Fragment key={pageIndex}>
+                {page.data.notifications.map((notification) => (
+                  <NotificationCard
+                    key={notification._id}
+                    notificationData={notification}
+                  />
+                ))}
+              </Fragment>
+            ))}
+            {notifications?.pages?.[notifications?.pages?.length - 1]?.meta
+              .pagination.nextPage && (
+              <ShowMoreButton
+                handleNextPage={fetchNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+              >
+                Load More
+              </ShowMoreButton>
+            )}
+          </>
+        ) : !notifications?.pages
+            ?.flatMap((page) => page.data.notifications)
+            .some((notification) => !notification.isRead) ? (
           <p className="text-center text-neutral-500">
             No unread notifications found.
           </p>
         ) : (
-          notifications?.notifications
-            .filter((notification) => notification.isRead === false)
-            ?.map((notification) => (
-              <NotificationCard
-                key={notification._id}
-                notificationData={notification}
-              />
-            ))
+          <>
+            {notifications?.pages?.map((page, pageIndex) => (
+              <Fragment key={pageIndex}>
+                {page.data.notifications
+                  ?.filter((notification) => notification.isRead === false)
+                  .map((notification) => (
+                    <NotificationCard
+                      key={notification._id}
+                      notificationData={notification}
+                    />
+                  ))}
+              </Fragment>
+            ))}
+          </>
         )}
       </div>
     </>

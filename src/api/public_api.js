@@ -15,7 +15,7 @@ publicApi.interceptors.request.use(
 );
 
 publicApi.interceptors.response.use(
-  (res) => res?.data?.data || res?.data || res,
+  (res) => res?.data || res,
   (error) => {
     if (error.response) {
       return Promise.reject({

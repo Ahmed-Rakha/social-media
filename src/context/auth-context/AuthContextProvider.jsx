@@ -28,12 +28,12 @@ export default function AuthContextProvider({ children }) {
 
       try {
         const {
-          value: { user },
+          value: { data },
         } = (
           await Promise.allSettled([$Services.USER_REPOSITORY.getMyProfile()])
         )[0];
-        console.log("User profile fetch result:", user);
-        setUserProfile(user || null);
+        console.log("User profile fetch result:", data.user);
+        setUserProfile(data.user || null);
       } catch (err) {
         logout();
         $Utilities.Alerts.displayError(
