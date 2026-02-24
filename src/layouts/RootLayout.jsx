@@ -5,7 +5,9 @@ export default function RootLayout() {
   return (
     <>
       <MainNavBar />
-      <Outlet />
+      <div className=" bg-neutral-100 pt-5">
+        <Outlet />
+      </div>
     </>
   );
 }
