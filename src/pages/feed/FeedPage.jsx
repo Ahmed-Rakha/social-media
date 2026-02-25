@@ -1,20 +1,20 @@
 import FeedLeftSideBar from "../../components/feed/feed-left-sidebar/FeedLeftSideBar";
-import FeedCenterTopSide from "../../components/feed/feed-center-top-side/FeedCenterTopSide";
-import FeedCenterBottomSide from "../../components/feed/feed-center-bottom-side/FeedCenterBottomSide";
+import CreatePost from "../../components/feed/create-post/CreatePost";
+import Posts from "../../components/feed/posts/Posts";
 import FeedRightSideBar from "../../components/feed/feed-right-sidebar/FeedRightSideBar";
 
 export default function FeedPage() {
   return (
-    <div className="container  feed-page grid grid-cols-12  gap-4 bg-amber-600">
+    <div className="feed-page grid grid-cols-12 py-8 rounded-3xl  gap-4">
       <div className="left-side col-span-12  lg:col-span-3">
         <FeedLeftSideBar />
       </div>
       <div className="center-side col-span-12 lg:col-span-6">
         <div className="center-top-side ">
-          <FeedCenterTopSide />
+          <CreatePost />
         </div>
         <div className="center-bottom-side">
-          <FeedCenterBottomSide />
+          <Posts />
         </div>
       </div>
 
