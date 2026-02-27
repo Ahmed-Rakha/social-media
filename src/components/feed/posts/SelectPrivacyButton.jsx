@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { $Utilities } from "../../../utilities/utilities-repository";
 
-const privacy = [
+const privacyList = [
   {
     key: "public",
     label: "Public",
@@ -18,10 +19,14 @@ const privacy = [
   },
 ];
 
-export default function PostSelectButton() {
+export default function SelectPrivacyButton({ privacy = "Public" }) {
   const [show, setShow] = useState(false);
-  const [selectValue, setSelectValue] = useState("Public");
-
+  const [selectValue, setSelectValue] = useState(() => {
+    console.log(privacy.includes("only"));
+    return privacy.includes("only")
+      ? "Only Me"
+      : $Utilities.generalHelpers.capitalizeFirstLetter(privacy);
+  });
   function toggleShow() {
     setShow(!show);
   }
@@ -36,8 +41,10 @@ export default function PostSelectButton() {
         onClick={toggleShow}
         className="flex items-center gap-2 p-1 hover:bg-neutral-100 rounded-xl cursor-pointer"
       >
-        <span>
-          <i className="fa-solid fa-globe text-neutral-400"></i>
+        <span className="text-neutral-400">
+          {privacyList.find((item) => item.label === selectValue)?.icon || (
+            <i className="fa-solid fa-globe text-neutral-400"></i>
+          )}
         </span>
         <span className="text-neutral-500 text-sm">{selectValue}</span>
         <span>
@@ -50,8 +57,9 @@ export default function PostSelectButton() {
       </p>
       {show && (
         <ul className="list-none bg-white border  border-neutral-200  rounded-xl overflow-hidden shadow-md min-w-35 absolute top-12">
-          {privacy.map((item) => (
+          {privacyList.map((item) => (
             <li
+              key={item.key}
               onClick={() => handleSelectedValue(item.label)}
               className="flex items-center gap-2 p-3 rounded-lg text-neutral-600 text-sm hover:bg-neutral-100 cursor-pointer"
             >

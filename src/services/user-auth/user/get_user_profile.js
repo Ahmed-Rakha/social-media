@@ -5,6 +5,6 @@ import { $API } from "../../../api/axios";
 export const getUserProfile = async (userId) => {
   const ROUTE = `users/${userId}/profile`;
 
-  const response = await $API.publicApi.get(`${ROUTE}`);
+  const response = await $API.privateApi.get(`${ROUTE}`);
   return response;
 };

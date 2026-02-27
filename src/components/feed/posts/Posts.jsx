@@ -1,166 +1,149 @@
-import { Link } from "react-router";
-import Avatar from "../../../assets/images/avatar-generations_rpge.jpg";
-import PostSelectButton from "./PostSelectButton";
-import EditPost from "./EditPost";
-import Comment from "./Comment";
-
-const DummyComments = [
-  {
-    _id: "699e11f0056bdb76272a5a60",
-    content: "Good boy",
-    commentCreator: {
-      _id: "69965fc4056bdb7627e37cbd",
-      name: "Sayed Mokdam",
-      username: "sayedmokdam",
-      photo:
-        "https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/1771507974649-2b0fd283-45fa-4194-937c-447091dbeb9b-Screenshot-2025-05-05-142811.webp",
-    },
-    post: "699def47056bdb762727dd8a",
-    parentComment: null,
-    likes: ["69965fc4056bdb7627e37cbd"],
-    createdAt: "2026-02-24T21:02:40.008Z",
-    repliesCount: 0,
-  },
-  {
-    _id: "699e11e8056bdb76272a5970",
-    content: "Nice",
-    commentCreator: {
-      _id: "69965fc4056bdb7627e37cbd",
-      name: "Sayed Mokdam",
-      username: "sayedmokdam",
-      photo:
-        "https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/1771507974649-2b0fd283-45fa-4194-937c-447091dbeb9b-Screenshot-2025-05-05-142811.webp",
-    },
-    post: "699def47056bdb762727dd8a",
-    parentComment: null,
-    likes: ["69965fc4056bdb7627e37cbd"],
-    createdAt: "2026-02-24T21:02:32.917Z",
-    repliesCount: 0,
-  },
-  {
-    _id: "699e11e1056bdb76272a581b",
-    content: "Nice",
-    commentCreator: {
-      _id: "69965fc4056bdb7627e37cbd",
-      name: "Sayed Mokdam",
-      username: "sayedmokdam",
-      photo:
-        "https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/1771507974649-2b0fd283-45fa-4194-937c-447091dbeb9b-Screenshot-2025-05-05-142811.webp",
-    },
-    post: "699def47056bdb762727dd8a",
-    parentComment: null,
-    likes: ["69965fc4056bdb7627e37cbd"],
-    createdAt: "2026-02-24T21:02:25.372Z",
-    repliesCount: 0,
-  },
-];
+import PostHeader from "./PostHeader";
+import PostBody from "./PostBody";
+import PostStats from "./PostStats";
+import PostActions from "./PostActions";
+import PostComment from "./comments/PostComment";
+import { useState } from "react";
+import { Divider } from "@heroui/react";
+import usePosts from "../../../hooks/usePosts";
+import PostSkeleton from "../../shared-components/skeletons/PostSkeleton";
+import TopComment from "./comments/TopComment";
+import { useQuery } from "@tanstack/react-query";
+import { $Services } from "../../../services/services-repository";
+import PostCommentSkeleton from "../../shared-components/skeletons/PostCommentSkeleton";
+import NoComments from "./comments/NoComments";
+import CreateComment from "./comments/CreateComment";
 
 export default function Posts() {
+  const [openCommentsPostId, setOpenCommentsPostId] = useState(false);
+  const { feedQuery, myPostsQuery, communityQuery, bookmarksQuery, activeTab } =
+    usePosts();
+  let activeQuery;
+
+  // Fetch comments for each post
+  const commentQuery = useQuery({
+    queryKey: ["comments", openCommentsPostId],
+    queryFn: () =>
+      $Services.COMMENTS_REPOSITORY.getPostComments(openCommentsPostId),
+    enabled: !!openCommentsPostId,
+  });
+
+  switch (activeTab) {
+    case "feed":
+      activeQuery = feedQuery;
+      break;
+    case "myPosts":
+      activeQuery = myPostsQuery;
+      break;
+    case "community":
+      activeQuery = communityQuery;
+      break;
+    case "bookmarks":
+      activeQuery = bookmarksQuery;
+      break;
+    default:
+      activeQuery = feedQuery;
+  }
+  function toggleShowComments(postId) {
+    setOpenCommentsPostId((prev) => (prev === postId ? null : postId));
+  }
+
+  console.log("From active query", activeQuery?.data);
   return (
-    <div className="container bg-white py-5 rounded-3xl mt-5">
-      {/* header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 flex-1">
-          <div className="w-10 h-10 rounded-full overflow-hidden cursor-pointer border-1 border-blue-300 flex items-center justify-center">
-            <img src={Avatar} alt="" />
-          </div>
-          <div className="flex-1">
-            <h2 className="font-bold">Ahmed Rakha</h2>
-            <div className="flex items-center gap-3">
-              <span>@ahmedrakha</span>
-              <span className=" block size-1 rounded-full bg-neutral-400"></span>
-              <span>2h</span>
-              <span className=" block size-1 rounded-full bg-neutral-400"></span>
-              <PostSelectButton />
+    <>
+      {activeQuery.isLoading
+        ? Array.from({ length: 3 }).map((_, index) => (
+            <PostSkeleton key={index} />
+          ))
+        : activeQuery?.data?.data?.posts?.map((post) => (
+            <div key={post._id}>
+              <div className=" bg-white pt-5 container rounded-t-3xl border-t-1 border-l-1 border-r-1 overflow-hidden border-neutral-200 mt-5">
+                {/* header post creator data*/}
+                <PostHeader
+                  postCreator={{
+                    ...post?.user,
+                    createdAt: post?.createdAt,
+                    privacy: post?.privacy,
+                  }}
+                />
+                {/* content */}
+                <PostBody
+                  postBody={{ content: post?.body, image: post?.image }}
+                />
+
+                {/* post stats */}
+                <PostStats
+                  postStats={{
+                    likesCount: post?.likesCount,
+                    commentsCount: post?.commentsCount,
+                    sharesCount: post?.sharesCount,
+                  }}
+                />
+                <Divider className="mb-4" />
+                {/* post actions */}
+                <PostActions
+                  postActions={{
+                    toggleShowComments: toggleShowComments,
+                    postId: post._id,
+                  }}
+                />
+              </div>
+
+              {/* comments */}
+
+              {post.topComment && !openCommentsPostId && (
+                <TopComment topComment={post.topComment} />
+              )}
+              {/* {!post.topComment && !openCommentsPostId && <NoComments />}  1*/}
+              {openCommentsPostId === post._id && (
+                <div className="container border border-neutral-200 rounded-b-3xl bg-neutral-100 py-7">
+                  <div className="mb-5 bg-white shadow-sm rounded-xl flex items-center justify-between p-5">
+                    <div className="flex items-center gap-3">
+                      <h5 className=" text-neutral-500 text-sm font-bold">
+                        Comments
+                      </h5>
+                      <p className="text-sm font-semibold text-blue-500 bg-blue-200 rounded-full w-5 h-5 flex items-center justify-center">
+                        {post?.commentsCount}
+                      </p>
+                    </div>
+
+                    <select
+                      name="order-comments"
+                      id="order-comments"
+                      className="text-sm text-neutral-500 outline-none"
+                    >
+                      <option value="most_relevant">Most Relevant</option>
+                      <option value="newest">Newest</option>
+                    </select>
+                  </div>
+                  {/* Render comments here */}
+                  <div className="">
+                    {commentQuery.isLoading ? (
+                      <PostCommentSkeleton />
+                    ) : commentQuery?.data?.data?.comments?.length === 0 ? (
+                      <>
+                        <NoComments />
+                        <CreateComment
+                          postId={post._id}
+                          activeTab={activeTab}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        {commentQuery?.data?.data?.comments?.map((comment) => (
+                          <PostComment key={comment._id} comment={comment} />
+                        ))}
+                        <CreateComment
+                          postId={post._id}
+                          activeTab={activeTab}
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-        <div>
-          {/* EditPost */}
-          <EditPost />
-        </div>
-      </div>
-
-      {/* content */}
-      <div className="mt-5">
-        <p className="text-sm mb-3">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae, natus
-          tempore. Quos, quia. Quae, natus tempore. Quos, quia. Quae, natus
-          tempore. Quos, quia. Quae, natus tempore. Quos, quia. Quae, natus
-          tempore. Quos, quia. Quae, natus tempore. Quos, quia. Quae, natus
-          tempore. Quos, quia. Quae, natus tempore. Quos, quia. Quae, natus
-        </p>
-        <div className="w-full overflow-hidden rounded-sm cursor-pointer border-1 border-neutral-100 flex items-center justify-center">
-          <img src={Avatar} alt="" />
-        </div>
-      </div>
-
-      {/* post details */}
-      <div className="my-8">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-1">
-            <span className="bg-blue-500 text-white p-1 rounded-full flex items-center">
-              <i className="fa-regular fa-thumbs-up"></i>
-            </span>
-            <span className="text-neutral-500">10</span>
-            <span className="text-neutral-500">Likes</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <p className="flex items-center gap-2 text-neutral-500">
-              <i className="fa-solid fa-retweet"></i>
-              <span>12</span>
-              <span>shares</span>
-            </p>
-            <p className="flex items-center gap-2 text-neutral-500">
-              <span>12</span>
-              <span>comments</span>
-            </p>
-            <p className="flex items-center gap-2">
-              <Link
-                to="/posts/postId"
-                className="text-blue-500 font-bold text-sm"
-              >
-                View details
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
-      {/* post actions */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="hover:bg-neutral-100 p-2 rounded-md text-center cursor-pointer">
-          <span className="text-neutral-500  p-2 rounded-full">
-            <i className="fa-regular fa-thumbs-up"></i>
-          </span>
-          <span className="text-neutral-500">Like</span>
-        </div>
-        <div className="hover:bg-neutral-100 p-2 rounded-md text-center cursor-pointer">
-          <span className="text-neutral-500  p-2 rounded-full">
-            <i className="fa-regular fa-comment-dots"></i>
-          </span>
-          <span className="text-neutral-500">Comment</span>
-        </div>
-        <div className="hover:bg-neutral-100 p-2 rounded-md text-center cursor-pointer">
-          <span className="text-neutral-500  p-2 rounded-full">
-            <i className="fa-solid fa-share-nodes"></i>
-          </span>
-          <span className="text-neutral-500">Share</span>
-        </div>
-      </div>
-      {/* comments */}
-      <div className="container rounded-xl bg-neutral-100 p-3 shadow-md">
-        <h5 className="font-bold text-neutral-500 text-sm mb-2  uppercase">
-          top comments
-        </h5>
-        {/* Render comments here */}
-        {DummyComments.map((comment) => (
-          <Comment key={comment._id} comment={comment} />
-        ))}
-
-        <button className="text-blue-500 font-semibold text-sm cursor-pointer">
-          View more comments
-        </button>
-      </div>
-    </div>
+          ))}
+    </>
   );
 }

@@ -7,10 +7,8 @@ export default function CreatePost() {
   const [text, setText] = useState("");
   const [showImage, setShowImage] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
-  const imageRef = useRef();
 
   const handleShowImage = (e) => {
-    console.log(e.target.files[0]);
     const blob = $Utilities.generalHelpers.getImageBlob(e.target.files[0]);
     setShowImage(blob);
   };

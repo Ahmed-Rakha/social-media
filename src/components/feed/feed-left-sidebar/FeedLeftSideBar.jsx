@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import usePosts from "../../../hooks/usePosts";
 
 export default function FeedLeftSideBar() {
-  const [activeTab, setActiveTab] = useState("feed");
-
+  const { activeTab, setActiveTab } = usePosts();
   const handleTabClick = (tab) => {
     console.log(tab);
     setActiveTab(tab);
@@ -32,8 +31,8 @@ export default function FeedLeftSideBar() {
           <span>Community</span>
         </li>
         <li
-          onClick={() => handleTabClick("saved")}
-          className={`${activeTab === "saved" ? "bg-blue-200 text-blue-500" : "bg-neutral-100"} px-4 py-3 rounded-lg flex items-center gap-2 font-semibold cursor-pointer`}
+          onClick={() => handleTabClick("bookmarks")}
+          className={`${activeTab === "bookmarks" ? "bg-blue-200 text-blue-500" : "bg-neutral-100"} px-4 py-3 rounded-lg flex items-center gap-2 font-semibold cursor-pointer`}
         >
           <i className="fa-regular fa-bookmark"></i>
           <span>Saved</span>

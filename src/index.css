@@ -22,3 +22,8 @@ img {
   object-fit: cover;
   display: block;
 }
+.container-wide {
+  @apply mx-auto;
+  @apply w-full;
+  @apply px-4 sm:px-6 lg:px-8;
+}
