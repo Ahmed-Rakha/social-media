@@ -26,7 +26,6 @@ export default function MainNavBar() {
     queryKey: $QUERY_KEYS.notifications.unreadCount,
     queryFn: () => $Services.NOTIFICATIONS_REPOSITORY.getUnreadCount(),
   });
-  console.log("unreadNotificationsData:", unreadNotificationsData);
 
   return (
     <Navbar isBordered variant="floating" className="bg-white py-3 ">
