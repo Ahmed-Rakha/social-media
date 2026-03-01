@@ -31,8 +31,6 @@ export default function Posts({ activeTab }) {
     setOpenCommentsPostId((prev) => (prev === postId ? null : postId));
   }
 
-  console.log("From active query", postQuery?.data);
-
   if (postQuery?.isLoading) {
     return (
       <>

@@ -31,7 +31,6 @@ export default function Signin() {
   const { mutate, isPending } = useMutation({
     mutationFn: (payload) => $Services.AUTH_REPOSITORY.signin(payload),
     onSuccess: ({ data }) => {
-      console.log("Signin successful, received data:", data);
       // navigate(from, { replace: true }); --- IGNORE since the cpt will rerender and the user will be redirected from the GuestRoute---
       $Utilities.Alerts.displaySuccess("Login successfully!");
       setSocialAppToken(data.token || null);

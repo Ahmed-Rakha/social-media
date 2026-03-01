@@ -22,7 +22,6 @@ const privacyList = [
 export default function SelectPrivacyButton({ privacy = "Public" }) {
   const [show, setShow] = useState(false);
   const [selectValue, setSelectValue] = useState(() => {
-    console.log(privacy.includes("only"));
     return privacy.includes("only")
       ? "Only Me"
       : $Utilities.generalHelpers.capitalizeFirstLetter(privacy);

@@ -52,7 +52,6 @@ export default function CreatePost({ activeTab }) {
       ...data,
       imageFile: data?.imageFile?.[0] || null,
     };
-    console.log(payload);
     createPostMutation.mutate(payload);
   }
 

@@ -1,7 +1,6 @@
 export default function FeedLeftSideBar({ activeTab, setActiveTab }) {
   // const { activeTab, setActiveTab } = usePosts();
   const handleTabClick = (tab) => {
-    console.log(tab);
     setActiveTab(tab);
   };
   return (

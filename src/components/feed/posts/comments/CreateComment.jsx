@@ -45,7 +45,6 @@ export default function CreateComment({ postId, activeTab }) {
   });
 
   function onSubmit(data) {
-    console.log(data);
     commentMutation.mutate(data);
   }
   //   toggle emoji picker
