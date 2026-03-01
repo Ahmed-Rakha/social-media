@@ -1,7 +1,7 @@
 import CustomAvatar from "../../../shared-components/avatars/CustomAvatar";
 export default function CommentHeader({ headerData }) {
   return (
-    <div className="flex items-start gap-3 mb-2 ">
+    <div className="flex items-start gap-3 mb-2">
       <CustomAvatar
         avatarData={{
           name: headerData?.commentCreator?.name,

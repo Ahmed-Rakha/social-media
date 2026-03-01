@@ -1,13 +1,11 @@
-import usePosts from "../../../hooks/usePosts";
-
-export default function FeedLeftSideBar() {
-  const { activeTab, setActiveTab } = usePosts();
+export default function FeedLeftSideBar({ activeTab, setActiveTab }) {
+  // const { activeTab, setActiveTab } = usePosts();
   const handleTabClick = (tab) => {
     console.log(tab);
     setActiveTab(tab);
   };
   return (
-    <div className="container py-5 bg-white rounded-3xl">
+    <div className="container section-padding py-5 bg-white rounded-3xl">
       <ul className="list-none grid grid-cols-2 md:grid-cols-1 gap-3">
         <li
           onClick={() => handleTabClick("feed")}

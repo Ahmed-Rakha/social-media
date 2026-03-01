@@ -8,6 +8,7 @@ import { likeAndUnlikePost } from "./like_unlike_post";
 import { sharePost } from "./share_post";
 import { updatePost } from "./update_post";
 import { bookmarkAndUnbookmarkPost } from "./bookmark_unbookmark_post";
+import { getPostsBySelectedTab } from "./get_posts_by_selected_tab";
 
 export const POSTS_REPOSITORY = {
   createPost,
@@ -20,4 +21,5 @@ export const POSTS_REPOSITORY = {
   sharePost,
   updatePost,
   bookmarkAndUnbookmarkPost,
+  getPostsBySelectedTab,
 };
