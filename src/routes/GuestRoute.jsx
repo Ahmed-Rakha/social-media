@@ -1,8 +1,8 @@
 import { Navigate, useLocation } from "react-router";
-import { useAuth } from "../context/auth-context/AuthContextProvider";
+import { $Contexts } from "../context/context-repository";
 
 export default function GuestRoute({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = $Contexts.useAuth();
   const location = useLocation();
   const from =
     location.state?.from?.pathname == "/"

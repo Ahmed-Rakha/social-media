@@ -1,8 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { $Services } from "../../services/services-repository";
 import { $Utilities } from "../../utilities/utilities-repository";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 export default function AuthContextProvider({ children }) {
   const [socialAppToken, setSocialAppToken] = useState(
     () => localStorage.getItem("social-app-token") || null,
@@ -69,15 +69,4 @@ export default function AuthContextProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-// Custom hook to use the AuthContext
-/**
- * @returns {{ socialAppToken: string | null, setSocialAppToken: () => void, userProfile: any, setUserProfile: () => void, isAuthenticated: boolean, logout: () => void }} An object containing the authentication token and a function to update it.
- */
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthContextProvider");
-  }
-  return context;
 }

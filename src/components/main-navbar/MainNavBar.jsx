@@ -10,14 +10,14 @@ import {
   Avatar,
 } from "@heroui/react";
 import { Link, NavLink } from "react-router";
-import { useAuth } from "../../context/auth-context/AuthContextProvider";
 import avatarFallback from "../../assets/images/avatar-generations_rpge.jpg";
 import { useQuery } from "@tanstack/react-query";
 import { $Services } from "../../services/services-repository";
 import { $QUERY_KEYS } from "../../query-keys/queryKeys";
+import { $Contexts } from "../../context/context-repository";
 
 export default function MainNavBar() {
-  const { logout, userProfile } = useAuth();
+  const { logout, userProfile } = $Contexts.useAuth();
 
   const {
     data: unreadNotificationsData,

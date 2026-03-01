@@ -1,4 +1,4 @@
-import { useAuth } from "./auth-context/AuthContextProvider";
+import { useAuth } from "../hooks/useAuth";
 
 export const $Contexts = {
   useAuth,
