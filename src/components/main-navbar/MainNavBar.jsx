@@ -15,9 +15,11 @@ import { useQuery } from "@tanstack/react-query";
 import { $Services } from "../../services/services-repository";
 import { $QUERY_KEYS } from "../../query-keys/queryKeys";
 import { $Contexts } from "../../context/context-repository";
+import { useMyProfile } from "../../hooks/useMyProfile";
 
 export default function MainNavBar() {
-  const { logout, userProfile } = $Contexts.useAuth();
+  const { logout } = $Contexts.useAuth();
+  const myProfileQuery = useMyProfile();
 
   const {
     data: unreadNotificationsData,
@@ -32,10 +34,10 @@ export default function MainNavBar() {
       <NavbarBrand>
         {/* <AcmeLogo /> */}
         <p className="font-bold text-inherit text-md lg:text-2xl">
-          <span className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-blue-400 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-indigo-600 via-indigo-500 to-blue-400 bg-clip-text text-transparent">
             Social
           </span>
-          <span className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-blue-500 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-indigo-700 via-indigo-600 to-blue-500 bg-clip-text text-transparent">
             App
           </span>
         </p>
@@ -97,17 +99,17 @@ export default function MainNavBar() {
                 isBordered
                 className="transition-transform"
                 color=""
-                name={userProfile?.name || "User"}
+                name={myProfileQuery?.data?.data?.user?.name || "User"}
                 size="md"
                 src={
-                  userProfile?.photo &&
-                  !userProfile?.photo.includes("undefined")
-                    ? userProfile?.photo
+                  myProfileQuery?.data?.data?.user?.photo &&
+                  !myProfileQuery?.data?.data?.user?.photo.includes("undefined")
+                    ? myProfileQuery?.data?.data?.user?.photo
                     : avatarFallback
                 }
               />
               <span className="hidden md:block ms-1 sm:text-[12px] lg:text-md font-medium">
-                {userProfile?.name}
+                {myProfileQuery?.data?.data?.user?.name}
               </span>
               <i className="fa-solid fa-bars"></i>
             </button>

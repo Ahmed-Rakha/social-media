@@ -5,6 +5,8 @@ import { getUserProfile } from "./get_user_profile";
 import { followUnfollowUser } from "./follow_unfollow_user";
 import { getFollowSuggestions } from "./get_follow_suggestions";
 import { getBookmarks } from "./get_bookmarks";
+import { changeProfileCover } from "./change_profile_cover";
+import { deleteProfileCover } from "./delete_profile_cover";
 
 export const USER_REPOSITORY = {
   getUserPosts,
@@ -14,4 +16,6 @@ export const USER_REPOSITORY = {
   followUnfollowUser,
   getFollowSuggestions,
   getBookmarks,
+  changeProfileCover,
+  deleteProfileCover,
 };
