@@ -1,17 +1,15 @@
-import {
-  Avatar,
-  Card,
-  CardBody,
-  CardHeader,
-  Image,
-} from "@heroui/react";
-import { Link } from "react-router";
+import { Avatar, Card, CardBody, CardHeader, Image } from "@heroui/react";
+import { Link, useParams } from "react-router";
 import { $Utilities } from "../../../../utilities/utilities-repository";
 import ImageInFullScreen from "../../../shared-components/images/ImageInFullScreen";
 import { $HOOKS_REPOSITORY } from "../../../../hooks/hooks_repository";
 
-export default function PostCard({ userPosts }) {
-  const { openViewerImage, setOpenViewerImage } = $HOOKS_REPOSITORY.useImageInFullScreen();
+export default function PostCard({ userPosts, isMyPost }) {
+  const { userId } = useParams();
+  console.log(userId);
+  console.log(userPosts);
+  const { openViewerImage, setOpenViewerImage } =
+    $HOOKS_REPOSITORY.useImageInFullScreen();
   return (
     <>
       {openViewerImage && (
@@ -29,9 +27,22 @@ export default function PostCard({ userPosts }) {
             src={userPosts?.user?.photo}
           />
           <div className="flex flex-col">
-            <p className="text-md font-semibold">{userPosts?.user?.name}</p>
+            {userId === userPosts?.user?._id || isMyPost ? (
+              <p className="text-md font-semibold text-default-600">
+                {userPosts?.user?.name}
+              </p>
+            ) : (
+              <Link
+                to={`/profile/${userPosts?.user?._id}`}
+                className="text-md font-semibold text-default-600"
+              >
+                {userPosts?.user?.name}
+              </Link>
+              
+            )}
             <p className="text-small text-default-500">
-              @{userPosts?.user?.username}
+              {userPosts?.user?.username && "@"}
+                  {userPosts?.user?.username}
             </p>
           </div>
         </CardHeader>

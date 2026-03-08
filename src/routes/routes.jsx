@@ -77,6 +77,7 @@ export const routes = createBrowserRouter([
         element: <h1>Settings</h1>,
       },
       {
+        index: true,
         path: "/feed",
         element: <FeedPage />,
         // children: [

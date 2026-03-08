@@ -9,6 +9,7 @@ export const $QUERY_KEYS = {
     myPosts: ["posts", "myPosts"],
     bookmarks: ["posts", "bookmarks"],
     community: ["posts", "community"],
+    userPosts: (userId) => ["posts", "userPosts", userId],
   },
   profile: {
     myProfile : ["profile", "myProfile"],

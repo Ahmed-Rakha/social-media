@@ -7,7 +7,12 @@ import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { $Services } from "../../../services/services-repository";
 import SelectPrivacyForCreatePost from "./SelectPrivacy";
+import UserMetaInfo from "../../shared-components/user/UserMetaInfo";
+import CustomAvatar from "../../shared-components/avatars/CustomAvatar";
+import { $HOOKS_REPOSITORY } from "../../../hooks/hooks_repository";
+import { useAuth } from "../../../hooks/useAuth";
 export default function CreatePost({ activeTab }) {
+  const {userProfile} = useAuth();
   const queryClient = useQueryClient();
   const [text, setText] = useState("");
   const [showImage, setShowImage] = useState(null);
@@ -59,11 +64,9 @@ export default function CreatePost({ activeTab }) {
     <div className="container section-padding bg-white py-5 rounded-3xl">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden cursor-pointer border-1 border-blue-300 flex items-center justify-center">
-            <img src={avatar} alt="" />
-          </div>
+          <CustomAvatar avatarData={userProfile} />
           <div>
-            <h2 className="font-bold">Ahmed Rakha</h2>
+            <h2 className="font-bold">{userProfile?.name}</h2>
             <Controller
               control={control}
               name="privacy"
@@ -81,7 +84,7 @@ export default function CreatePost({ activeTab }) {
           name="content"
           id="content"
           rows="8"
-          placeholder="What's on your mind?"
+          placeholder={`What's on your mind, ${userProfile?.name} 😃?`}
           value={text}
           {...register("content")}
           onChange={(e) => setText(e.target.value)}

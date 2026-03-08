@@ -11,7 +11,7 @@ export default function PostBody({ postBody }) {
           setOpenViewerImage={setOpenViewerImage}
         />
       )}
-      <div className="mt-5">
+      <div className="mt-5 wrap-anywhere">
         {postBody?.content && (
           <p className="text-sm mb-3">{postBody?.content}</p>
         )}

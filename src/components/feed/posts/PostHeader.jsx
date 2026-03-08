@@ -1,46 +1,48 @@
-import { Link } from "react-router";
-import Avatar from "../../../assets/images/avatar-generations_rpge.jpg";
-import { $Utilities } from "../../../utilities/utilities-repository";
-import CustomAvatar from "../../shared-components/avatars/CustomAvatar";
 import EditPost from "./EditPost";
-import SelectPrivacyButton from "./SelectPrivacyButton";
+import CustomAvatar from "../../shared-components/avatars/CustomAvatar";
+import { $Utilities } from "../../../utilities/utilities-repository";
+import { Link } from "react-router";
+import PostPrivacy from "./PostPrivacy";
+import { Tooltip } from "@heroui/react";
 export default function PostHeader({ postCreator }) {
   const formatDate = $Utilities.Dates.displayRelativeTime;
+  console.log(postCreator);
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3 flex-1">
-        <Link to={`/profile/${postCreator?._id}`}>
-          <CustomAvatar
-            avatarData={{
-              name: postCreator?.name,
-              image: postCreator?.photo,
-              username: postCreator?.username,
-            }}
-          />
-        </Link>
-
-        <div className="flex-1">
-          <h2 className="font-bold text-sm">{postCreator?.name}</h2>
-          <div className="flex items-center gap-3">
-            <Link to={`/profile/${postCreator?._id}`}>
-              <span className="text-neutral-400 text-sm hover:text-blue-500 cursor-pointer">
-                @{postCreator?.username}
-              </span>
-            </Link>
-            <span className=" block size-1 rounded-full bg-neutral-400"></span>
+    <div className="flex items-center justify-between relative">
+      {/* UserMetaInfo */}
+      <div className="flex  gap-3">
+        <CustomAvatar avatarData={postCreator} />
+        <div className="flex flex-col gap-1">
+          <Link
+            to={`/profile/${postCreator?._id}`}
+            className="font-bold text-sm"
+          >
+            {postCreator?.name}
+          </Link>
+          <div className="flex items-cente gap-2">
             <span className="text-neutral-400 text-sm">
               {formatDate(postCreator?.createdAt)}
             </span>
-            <span className=" block size-1 rounded-full bg-neutral-400"></span>
-            {/* Select Privacy */}
-            <SelectPrivacyButton privacy={postCreator?.privacy} />
+            <PostPrivacy privacy={postCreator?.privacy} />
           </div>
         </div>
       </div>
+
+      {/* EditPost */}
       <div>
-        {/* EditPost */}
-        <EditPost />
+        <EditPost
+          postId={postCreator?.postId}
+          userId={postCreator?._id}
+          isBookmarked={postCreator.isBookmarked}
+        />
       </div>
+      {postCreator.isBookmarked && (
+        <Tooltip content="Saved">
+          <div className="text-blue-500 absolute -top-5 -right-1">
+            <i className="fa-solid fa-bookmark fa-xl"></i>
+          </div>
+        </Tooltip>
+      )}
     </div>
   );
 }

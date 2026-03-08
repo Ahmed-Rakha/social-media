@@ -37,28 +37,28 @@ export default function SelectPrivacyForCreatePost({
     setShow(false);
   }
   return (
-    <div className="relative">
+    <div className="relative text-xs">
       <p
         onClick={toggleShow}
-        className="flex items-center gap-2 p-1 hover:bg-neutral-100 rounded-xl cursor-pointer"
+        className="flex items-center gap-2 py-2 hover:bg-neutral-100 rounded-md cursor-pointer"
       >
         <span className="text-neutral-400">{selectedItem.icon}</span>
-        <span className="text-neutral-500 text-sm">{selectedItem.label}</span>
+        <span className="text-neutral-500 text-xs">{selectedItem.label}</span>
         <span>
           <i
             className={`fa-solid ${
               show ? "fa-chevron-up" : "fa-chevron-down"
-            } text-neutral-500 text-sm`}
+            } text-neutral-500 text-xs`}
           />
         </span>
       </p>
       {show && (
-        <ul className="list-none bg-white border  border-neutral-200  rounded-xl overflow-hidden shadow-md min-w-35 absolute top-12">
+        <ul className="list-none bg-white border  border-neutral-200  rounded-xl overflow-hidden shadow-md min-w-35 absolute top-12 ">
           {privacyList.map((item) => (
             <li
               key={item.key}
               onClick={() => handleSelectedValue(item)}
-              className="flex items-center gap-2 p-3 rounded-lg text-neutral-600 text-sm hover:bg-neutral-100 cursor-pointer"
+              className="flex items-center gap-2 p-3 rounded-lg text-neutral-600 text-xs hover:bg-neutral-100 cursor-pointer"
             >
               <span>{item.icon}</span>
               <span>{item.label}</span>

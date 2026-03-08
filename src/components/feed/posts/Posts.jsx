@@ -52,6 +52,8 @@ export default function Posts({ activeTab }) {
                     ...post?.user,
                     createdAt: post?.createdAt,
                     privacy: post?.privacy,
+                    postId: post._id,
+                    isBookmarked: post?.bookmarked,
                   }}
                 />
                 {/* content */}
@@ -65,14 +67,16 @@ export default function Posts({ activeTab }) {
                     likesCount: post?.likesCount,
                     commentsCount: post?.commentsCount,
                     sharesCount: post?.sharesCount,
+                    postId: post._id,
                   }}
                 />
-                <Divider className="mb-4" />
+                {/* <Divider className="mb-2" /> */}
                 {/* post actions */}
                 <PostActions
                   postActions={{
                     toggleShowComments: toggleShowComments,
                     postId: post._id,
+                    likes: post?.likes,
                   }}
                 />
               </div>

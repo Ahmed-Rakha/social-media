@@ -1,37 +1,42 @@
 import { Link } from "react-router";
-import ThumbsUp from "../../shared-components/buttons/ThumbsUp";
-
 export default function PostStats({ postStats }) {
+  console.log(postStats);
   return (
-    <div className=" my-8">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-1">
-          <ThumbsUp />
-          <span className="text-neutral-500">{postStats?.likesCount}</span>
-          <span className="text-neutral-500">
-            {postStats?.likesCount > 1 ? "Likes" : "Like"}
+    <Link
+      to={`/posts/${postStats?.postId}`}
+      className="flex flex-col gap-4 md:flex-row justify-between text-xs text-gray-500 my-4"
+    >
+      <div className="flex items-center justify-between gap-6">
+        <div className="flex items-center gap-2">
+          <span className="text-blue-500">
+            <i className="fa-regular fa-thumbs-up"></i>
+          </span>
+          <span>
+            {postStats?.likesCount}{" "}
+            {postStats?.likesCount > 1 ? "likes" : "like"}
           </span>
         </div>
-        <div className="flex items-center gap-3">
-          <p className="flex items-center gap-2 text-neutral-500">
-            <i className="fa-solid fa-retweet"></i>
-            <span>{postStats?.sharesCount}</span>
-            <span>{postStats?.sharesCount > 1 ? "shares" : "share"}</span>
-          </p>
-          <p className="flex items-center gap-2 text-neutral-500">
-            <span>{postStats?.commentsCount}</span>
-            <span>{postStats?.commentsCount > 1 ? "comments" : "comment"}</span>
-          </p>
-          <p className="flex items-center gap-2">
-            <Link
-              to="/posts/postId"
-              className="text-blue-500 font-bold text-sm"
-            >
-              View details
-            </Link>
-          </p>
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <span className="text-blue-500">
+              <i className="fa-solid fa-retweet"></i>
+            </span>
+            <span>
+              {postStats?.sharesCount}{" "}
+              {postStats?.sharesCount > 1 ? "shares" : "share"}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-blue-500">
+              <i className="fa-regular fa-comment"></i>
+            </span>
+            <span>
+              {postStats?.commentsCount}{" "}
+              {postStats?.commentsCount > 1 ? "comments" : "comment"}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

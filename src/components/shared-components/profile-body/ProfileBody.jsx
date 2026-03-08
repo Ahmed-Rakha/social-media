@@ -82,13 +82,13 @@ export default function ProfileBody() {
         {activeTab === "myPosts" &&
           myPostsQuery?.data?.pages?.map((page) =>
             page?.data?.posts?.map((post) => (
-              <PostCard key={post._id} userPosts={post} />
+              <PostCard key={post._id} userPosts={post} isMyPost />
             )),
           )}
         {activeTab === "saved" &&
           myBookmarksQuery?.data?.pages?.map((page) =>
             page?.data?.bookmarks?.map((bookmark) => (
-              <PostCard key={bookmark._id} userPosts={bookmark} />
+              <PostCard key={bookmark._id} userPosts={bookmark} isMyPost={false} />
             )),
           )}
         {activeTab === "myPosts" && postsLength === 0 && (

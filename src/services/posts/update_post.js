@@ -26,6 +26,7 @@ import { $API } from "../../api/axios";
  * } payload - The payload is required
  */
 export const updatePost = async (postId, payload) => {
+  console.log("payload", payload);
   const ROUTE = `posts/${postId}`;
   const formData = new FormData();
   payload.newContent && formData.append("body", payload.newContent);
