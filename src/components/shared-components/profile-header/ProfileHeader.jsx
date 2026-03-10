@@ -17,7 +17,8 @@ export default function ProfileHeader() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [privacy, setPrivacy] = useState("public");
   const [imageFile, setImageFile] = useState(null);
-  const { openViewerImage, setOpenViewerImage } = $HOOKS_REPOSITORY.useImageInFullScreen();
+  const { openViewerImage, setOpenViewerImage } =
+    $HOOKS_REPOSITORY.useImageInFullScreen();
 
   // Get my profile
   const myProfileQuery = useMyProfile();
@@ -91,6 +92,7 @@ export default function ProfileHeader() {
 
   return (
     <>
+      <title>{myProfileQuery?.data?.data?.user?.name}</title>
       {openViewerImage && (
         <ImageInFullScreen
           openViewerImage={openViewerImage}

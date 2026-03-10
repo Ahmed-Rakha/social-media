@@ -1,39 +1,47 @@
 export default function FeedLeftSideBar({ activeTab, setActiveTab }) {
-  // const { activeTab, setActiveTab } = usePosts();
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  const tabs = [
+    {
+      id: "feed",
+      label: "Feed",
+      icon: "fa-regular fa-newspaper",
+    },
+    {
+      id: "community",
+      label: "Community",
+      icon: "fa-solid fa-users",
+    },
+  ];
+
   return (
-    <div className="container section-padding py-5 bg-white rounded-3xl">
-      <ul className="list-none grid grid-cols-2 md:grid-cols-1 gap-3">
-        <li
-          onClick={() => handleTabClick("feed")}
-          className={` ${activeTab === "feed" ? "bg-blue-200 text-blue-500" : "bg-neutral-100"} px-4 py-3 rounded-lg flex items-center gap-2 font-semibold cursor-pointer`}
-        >
-          <i className="fa-regular fa-newspaper"></i>
-          <span>Feed</span>
-        </li>
-        <li
-          onClick={() => handleTabClick("myPosts")}
-          className={` ${activeTab === "myPosts" ? "bg-blue-200 text-blue-500" : "bg-neutral-100"}  px-4 py-3  rounded-lg flex items-center gap-2 font-semibold cursor-pointer`}
-        >
-          <i className="fa-solid fa-signs-post"></i>
-          <span>My Posts</span>
-        </li>
-        <li
-          onClick={() => handleTabClick("community")}
-          className={` ${activeTab === "community" ? "bg-blue-200 text-blue-500" : "bg-neutral-100"} px-4 py-3  rounded-lg flex items-center gap-2 font-semibold cursor-pointer`}
-        >
-          <i className="fa-brands fa-dribbble"></i>
-          <span>Community</span>
-        </li>
-        <li
-          onClick={() => handleTabClick("bookmarks")}
-          className={`${activeTab === "bookmarks" ? "bg-blue-200 text-blue-500" : "bg-neutral-100"} px-4 py-3 rounded-lg flex items-center gap-2 font-semibold cursor-pointer`}
-        >
-          <i className="fa-regular fa-bookmark"></i>
-          <span>Saved</span>
-        </li>
+    <div className="bg-white rounded-xl p-4 shadow-sm border border-neutral-200">
+      <ul className="flex flex-col gap-2">
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+
+          return (
+            <li
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold cursor-pointer transition-all duration-200
+              
+              ${
+                isActive
+                  ? "bg-blue-50 text-blue-600 border border-blue-200"
+                  : "text-neutral-600 hover:bg-neutral-100"
+              }
+              
+              `}
+            >
+              <i className={`${tab.icon} text-lg`}></i>
+
+              <span className="text-sm">{tab.label}</span>
+
+              {isActive && (
+                <span className="ml-auto w-2 h-2 rounded-full bg-blue-500"></span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

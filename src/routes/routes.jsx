@@ -74,7 +74,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: "settings",
-        element: <h1>Settings</h1>,
+        element: <ChangePasswordPage />,
       },
       {
         index: true,

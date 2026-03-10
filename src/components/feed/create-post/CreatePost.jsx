@@ -12,7 +12,7 @@ import CustomAvatar from "../../shared-components/avatars/CustomAvatar";
 import { $HOOKS_REPOSITORY } from "../../../hooks/hooks_repository";
 import { useAuth } from "../../../hooks/useAuth";
 export default function CreatePost({ activeTab }) {
-  const {userProfile} = useAuth();
+  const { userProfile } = useAuth();
   const queryClient = useQueryClient();
   const [text, setText] = useState("");
   const [showImage, setShowImage] = useState(null);
@@ -61,12 +61,15 @@ export default function CreatePost({ activeTab }) {
   }
 
   return (
-    <div className="container section-padding bg-white py-5 rounded-3xl">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex items-center gap-3">
+    <div className="bg-white rounded-2xl border border-neutral-200 p-5 shadow-sm">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Header */}
+        <div className="flex items-start gap-3">
           <CustomAvatar avatarData={userProfile} />
-          <div>
-            <h2 className="font-bold">{userProfile?.name}</h2>
+
+          <div className="flex flex-col">
+            <h2 className="font-semibold text-sm">{userProfile?.name}</h2>
+
             <Controller
               control={control}
               name="privacy"
@@ -79,90 +82,101 @@ export default function CreatePost({ activeTab }) {
             />
           </div>
         </div>
+
+        {/* Textarea */}
         <textarea
-          className="bg-neutral-100 w-full rounded-xl p-4 mt-4 focus:outline-blue-300 focus:bg-white"
-          name="content"
-          id="content"
-          rows="8"
-          placeholder={`What's on your mind, ${userProfile?.name} 😃?`}
-          value={text}
+          rows="5"
+          maxLength={500}
+          placeholder={`What's on your mind, ${userProfile?.name}? 😃`}
+          className="w-full resize-none bg-neutral-100 rounded-xl p-4 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 transition"
           {...register("content")}
+          value={text}
           onChange={(e) => setText(e.target.value)}
-        ></textarea>
-        {
-          /* Image */
-          showImage && (
-            <div className="flex items-center gap-3 w-full h-70 rounded-2xl overflow-hidden relative">
-              <img src={showImage} alt="avatar" />
-              <span
-                onClick={deleteImage}
-                className="text-white/60 cursor-pointer text-xl absolute top-2 right-2 bg-black/60   size-8 flex items-center justify-center rounded-full"
-              >
-                <i className="fa-solid fa-xmark "></i>
-              </span>
-            </div>
-          )
-        }
-        <Divider className="my-5" />
+        />
+
+        {/* Image Preview */}
+        {showImage && (
+          <div className="relative w-full h-72 rounded-xl overflow-hidden border">
+            <img
+              src={showImage}
+              alt="preview"
+              className="w-full h-full object-cover"
+            />
+
+            <button
+              type="button"
+              onClick={deleteImage}
+              className="absolute top-2 right-2 bg-black/70 hover:bg-black text-white size-8 rounded-full flex items-center justify-center"
+            >
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        )}
+
+        {/* Divider */}
+        <Divider />
 
         {/* Actions */}
         <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-5 md:gap-10">
-              <div className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="file"
-                  name="imageFile"
-                  id="image-video"
-                  hidden
-                  {...register("imageFile", {
-                    onChange: (e) => handleShowImage(e),
-                  })}
-                />
-                <label
-                  htmlFor="image-video"
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <i className="fa-solid fa-image text-green-500 text-xl"></i>
-                  <span className="text-neutral-600 hidden md:block">
-                    Photo/Video
-                  </span>
-                </label>
-              </div>
-              <div className="flex items-center gap-2 cursor-pointer relative">
-                {showPicker && (
-                  <div className="absolute top-10 z-50">
-                    <EmojiPicker
-                      onEmojiClick={(e) => setText((prev) => prev + e.emoji)}
-                    />
-                  </div>
-                )}
-                <label
-                  htmlFor="video"
-                  className="flex items-center gap-2"
-                  onClick={() => setShowPicker(!showPicker)}
-                >
-                  <i className="fa-regular fa-face-smile text-orange-500 cursor-pointer text-xl "></i>
-                  <span className="text-neutral-600 cursor-pointer hidden md:block">
-                    Feeling/activity
-                  </span>
-                </label>
-              </div>
+          {/* Left Actions */}
+          <div className="flex items-center gap-6">
+            {/* Upload */}
+            <div>
+              <input
+                type="file"
+                id="image-video"
+                hidden
+                {...register("imageFile", {
+                  onChange: (e) => handleShowImage(e),
+                })}
+              />
+
+              <label
+                htmlFor="image-video"
+                className="flex items-center gap-2 cursor-pointer text-neutral-600 hover:text-black"
+              >
+                <i className="fa-solid fa-image text-green-500 text-xl"></i>
+                <span className="hidden md:block text-sm">Photo</span>
+              </label>
             </div>
-            <div></div>
+
+            {/* Emoji */}
+            <div className="relative">
+              {showPicker && (
+                <div className="absolute top-10 z-50">
+                  <EmojiPicker
+                    onEmojiClick={(e) => setText((prev) => prev + e.emoji)}
+                  />
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setShowPicker(!showPicker)}
+                className="flex items-center gap-2 text-neutral-600 hover:text-black"
+              >
+                <i className="fa-regular fa-face-smile text-orange-500 text-xl"></i>
+                <span className="hidden md:block text-sm">Feeling</span>
+              </button>
+            </div>
           </div>
+
+          {/* Right Actions */}
           <div className="flex items-center gap-3">
-            <p className="text-neutral-600 hidden md:block">500/500</p>
+            {/* Character Counter */}
+            <p className="text-xs text-neutral-500 ">{text.length}/500</p>
+
+            {/* Post Button */}
             <button
-              disabled={createPostMutation.isPending}
+              disabled={createPostMutation.isPending || text.length === 0}
               type="submit"
-              className={`bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 flex items-center gap-2 rounded-lg font-semibold ${createPostMutation.isPending ? "cursor-not-allowed" : "cursor-pointer"}`}
+              className={`bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white px-5 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition ${createPostMutation.isPending || text.length === 0 ? "cursor-not-allowed" : ""}`}
             >
               {createPostMutation.isPending ? (
                 <i className="fa-solid fa-spinner animate-spin"></i>
               ) : (
                 <>
-                  <span className="font-semibold text-md">Post</span>
+                  <span>Post</span>
                   <i className="fa-solid fa-paper-plane"></i>
                 </>
               )}

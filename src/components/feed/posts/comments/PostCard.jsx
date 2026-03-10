@@ -3,13 +3,22 @@ import { Link, useParams } from "react-router";
 import { $Utilities } from "../../../../utilities/utilities-repository";
 import ImageInFullScreen from "../../../shared-components/images/ImageInFullScreen";
 import { $HOOKS_REPOSITORY } from "../../../../hooks/hooks_repository";
+import { useState } from "react";
 
 export default function PostCard({ userPosts, isMyPost }) {
+  console.log("userPosts", userPosts);
   const { userId } = useParams();
-  console.log(userId);
-  console.log(userPosts);
   const { openViewerImage, setOpenViewerImage } =
     $HOOKS_REPOSITORY.useImageInFullScreen();
+
+  const [showFullText, setShowFullText] = useState(false);
+  const textLimit = 150;
+
+  const hasLongText = userPosts?.body?.length > textLimit;
+  const displayedText = showFullText
+    ? userPosts?.body
+    : userPosts?.body?.slice(0, textLimit);
+
   return (
     <>
       {openViewerImage && (
@@ -34,29 +43,44 @@ export default function PostCard({ userPosts, isMyPost }) {
             ) : (
               <Link
                 to={`/profile/${userPosts?.user?._id}`}
-                className="text-md font-semibold text-default-600"
+                className="text-md font-semibold text-default-600 hover:underline cursor-pointer"
               >
                 {userPosts?.user?.name}
               </Link>
-              
             )}
-            <p className="text-small text-default-500">
+            <p className="text-small text-default-500 ">
               {userPosts?.user?.username && "@"}
-                  {userPosts?.user?.username}
+              {userPosts?.user?.username}
             </p>
           </div>
         </CardHeader>
-        <CardBody className="max-h-150 overflow-y-hidden">
-          <p className="text-md mb-3">{userPosts?.body}</p>
+
+        <CardBody className="mt-4 h-full overflow-y-hidden">
+          {userPosts?.body && (
+            <p className="text-md mb-3">
+              {displayedText}
+              {hasLongText && !showFullText && "..."}
+            </p>
+          )}
+
+          {hasLongText && (
+            <button
+              className="text-blue-500 text-sm font-semibold mb-3 cursor-pointer"
+              onClick={() => setShowFullText(!showFullText)}
+            >
+              {showFullText ? "Show Less" : "Show More"}
+            </button>
+          )}
+
           {userPosts?.image && (
-            <Image
-              height="100%"
-              width="100%"
-              src={userPosts?.image}
-              className="rounded-2xl cursor-pointer"
-              alt="post image"
-              onClick={() => setOpenViewerImage(userPosts?.image)}
-            />
+            <div className=" h-48 md:h-150 mb-3 rounded-2xl">
+              <img
+                src={userPosts?.image}
+                className="rounded-2xl cursor-pointer"
+                alt="post image"
+                onClick={() => setOpenViewerImage(userPosts?.image)}
+              />
+            </div>
           )}
         </CardBody>
         <div className="flex flex-col gap-4 md:flex-row justify-between text-xs text-gray-500 mt-4">
@@ -94,7 +118,8 @@ export default function PostCard({ userPosts, isMyPost }) {
               <i className="fa-regular fa-clock"></i>
             </span>
             <span>
-              {$Utilities.Dates.displayPostAndCommentDate(userPosts?.createdAt)}
+              {userPosts?.createdAt &&
+                $Utilities.Dates.displayPostAndCommentDate(userPosts.createdAt)}
             </span>
           </div>
         </div>
