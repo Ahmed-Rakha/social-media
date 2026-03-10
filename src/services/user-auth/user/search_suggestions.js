@@ -1,14 +1,14 @@
 import { $API } from "../../../api/axios";
 
 /**
- * @param {{ limit?: number }} [queryParams] - The queryParams is optional
+ * @param {{ q?: string }} [queryParams] - The queryParams is optional
  */
-export const getFollowSuggestions = async (queryParams) => {
+export const searchSuggestions = async (queryParams) => {
   const finalParams = {
-    limit: 50,
+    limit: 20,
     ...queryParams,
   };
-  const ROUTE = `users/suggestions`;
+  const ROUTE = `users/search`;
 
   const response = await $API.privateApi.get(`${ROUTE}`, {
     params: {
