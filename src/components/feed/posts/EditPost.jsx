@@ -2,9 +2,10 @@ import { useDisclosure } from "@heroui/react";
 import { useState } from "react";
 import EditPrivacyModal from "../../modals/EditPrivacyModal";
 import { $HOOKS_REPOSITORY } from "../../../hooks/hooks_repository";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { $Services } from "../../../services/services-repository";
 import { $Utilities } from "../../../utilities/utilities-repository";
+import { $QUERY_KEYS } from "../../../query-keys/queryKeys";
 
 const actions = [
   {
@@ -34,6 +35,7 @@ export default function EditPost({ postId, userId, isBookmarked }) {
   const [selectValue, setSelectValue] = useState("Public");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const myProfileQuery = $HOOKS_REPOSITORY.useMyProfile();
+  const queryClient = useQueryClient();
   function toggleShow() {
     setShow(!show);
   }
@@ -54,6 +56,9 @@ export default function EditPost({ postId, userId, isBookmarked }) {
       $Utilities.Alerts.displaySuccess(
         `${data.data.bookmarked ? "Bookmarked" : "Unbookmarked"} successfully`,
       );
+      queryClient.invalidateQueries({
+        queryKey: $QUERY_KEYS.posts.all,
+      });
     },
 
     onError: (error) => {
@@ -69,7 +74,8 @@ export default function EditPost({ postId, userId, isBookmarked }) {
     onError: (error) => {
       $Utilities.Alerts.displayError(error);
     },
-  })
+  });
+
   return (
     <div className="relative">
       <p onClick={toggleShow} className="cursor-pointer">
@@ -86,7 +92,9 @@ export default function EditPost({ postId, userId, isBookmarked }) {
               className={`flex items-center gap-2 px-3 py-2.5 rounded-lg ${item.key === "delete" ? "text-red-500" : "text-neutral-600"} text-xs hover:bg-neutral-100 cursor-pointer ${!(myProfileQuery?.data?.data?.user?._id === userId) && (item.key === "delete" || item.key === "editPrivacy" || item.key === "editPost") ? "hidden" : ""} `}
             >
               <span>{item.icon}</span>
-              <span>{isBookmarked && item.key === "save" ? "Un Save" : item.label}</span>
+              <span>
+                {isBookmarked && item.key === "save" ? "Un Save" : item.label}
+              </span>
             </li>
           ))}
         </ul>
