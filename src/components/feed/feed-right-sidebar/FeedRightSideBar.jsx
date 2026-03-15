@@ -4,8 +4,8 @@ import { Link } from "react-router";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { $Services } from "../../../services/services-repository";
-import { $QUERY_KEYS } from "../../../query-keys/queryKeys";
 import SuggestionsCard from "./SuggestionsCard";
+import { $QUERY_KEYS } from "../../../query-keys/queryKeys";
 
 export default function FeedRightSideBar() {
   const [isOpenSuggestions, setIsOpenSuggestions] = useState(true);
@@ -23,13 +23,13 @@ export default function FeedRightSideBar() {
   const suggestedFriendsQuery = useQuery({
     queryFn: () =>
       $Services.USER_REPOSITORY.getFollowSuggestions({ limit: 10 }),
-    queryKey: ["suggested-friends", search],
+    queryKey: [$QUERY_KEYS.suggestionFriends, search],
   });
 
   // Get search suggested friends
   const searchSuggestedFriends = useQuery({
     queryFn: () => $Services.USER_REPOSITORY.searchSuggestions({ q: search }),
-    queryKey: $QUERY_KEYS.searchSuggestions,
+    queryKey: ["search-suggested-friends", search],
   });
 
   // Handle search
@@ -42,7 +42,7 @@ export default function FeedRightSideBar() {
   // Get suggestions
   const suggestions =
     search.length > 0
-      ? searchSuggestedFriends?.data?.data?.users
+      ? searchSuggestedFriends?.data?.data?.suggestions
       : suggestedFriendsQuery?.data?.data?.suggestions;
 
   return (
