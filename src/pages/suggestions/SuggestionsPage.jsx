@@ -1,17 +1,20 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { $QUERY_KEYS } from "../../query-keys/queryKeys";
 import { $Services } from "../../services/services-repository";
 import { Button, Input, Tooltip } from "@heroui/react";
 import SuggestionsCard from "../../components/feed/feed-right-sidebar/SuggestionsCard";
 
 export default function SuggestionsPage() {
-  const [search, setSearch] = useState("");
+  const { state } = useLocation();
+  // console.log("state", state);
+
+  const [search, setSearch] = useState(state?.search || "");
 
   const { register } = useForm({
-    defaultValues: { search: "" },
+    defaultValues: { search: search },
   });
 
   // Get suggested friends
@@ -56,7 +59,8 @@ export default function SuggestionsPage() {
     return suggestedFriendsQuery.fetchNextPage();
   }
 
-  const activeQuery = search.length > 0 ? searchSuggestedFriends : suggestedFriendsQuery;
+  const activeQuery =
+    search.length > 0 ? searchSuggestedFriends : suggestedFriendsQuery;
 
   return (
     <div
@@ -138,8 +142,8 @@ export default function SuggestionsPage() {
                       )}
                     </Button>
                   </div>
-                  // If no more suggestions
                 ) : (
+                  // If no more suggestions
                   <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center">
                     <p className="text-xs text-neutral-500 font-semibold mt-10">
                       No more suggestions
@@ -147,8 +151,8 @@ export default function SuggestionsPage() {
                   </div>
                 )}
               </div>
-              // If no suggestions
             ) : (
+              // If no suggestions
               <div className="text-xs text-neutral-500 font-semibold text-center mt-10">
                 {/* If loading */}
                 {activeQuery?.isLoading ? (
