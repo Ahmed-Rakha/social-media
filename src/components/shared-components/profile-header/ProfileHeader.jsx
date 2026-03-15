@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { $Utilities } from "../../../utilities/utilities-repository";
 import { $QUERY_KEYS } from "../../../query-keys/queryKeys";
 import { useMyProfile } from "../../../hooks/useMyProfile";
-import ProfileCoverModal from "../../modals/profileCoverModal";
+import ProfileCoverModal from "../../modals/ProfileCoverModal";
 import ImageInFullScreen from "../images/ImageInFullScreen";
 import { $HOOKS_REPOSITORY } from "../../../hooks/hooks_repository";
 import FollowersFollowingModal from "../../modals/FollowersFollowingModal";
