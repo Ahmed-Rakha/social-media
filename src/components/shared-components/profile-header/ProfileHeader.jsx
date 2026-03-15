@@ -9,8 +9,15 @@ import { useMyProfile } from "../../../hooks/useMyProfile";
 import ProfileCoverModal from "../../modals/profileCoverModal";
 import ImageInFullScreen from "../images/ImageInFullScreen";
 import { $HOOKS_REPOSITORY } from "../../../hooks/hooks_repository";
+import FollowersFollowingModal from "../../modals/FollowersFollowingModal";
 
-export default function ProfileHeader() {
+export default function ProfileHeader({ myPostsQuery, myBookmarksQuery }) {
+  const {
+    isOpen: isOpenFollowers,
+    onOpen: onOpenFollowers,
+    onOpenChange: onOpenChangeFollowers,
+  } = useDisclosure();
+  const [followType, setFollowType] = useState(null);
   const cover = useRef();
   const photo = useRef();
   const queryClient = useQueryClient();
@@ -22,7 +29,13 @@ export default function ProfileHeader() {
 
   // Get my profile
   const myProfileQuery = useMyProfile();
-
+  const myPostsLength = myPostsQuery?.data?.pages[0]?.meta?.pagination?.total;
+  const myBookmarksLength =
+    myBookmarksQuery?.data?.pages[0]?.meta?.pagination?.total;
+  const myFollowersIds = myProfileQuery?.data?.data?.user?.followers;
+  const myFollowingIds = myProfileQuery?.data?.data?.user?.following;
+  console.log("myFollowingIds", myFollowingIds);
+  console.log("myFollowersIds", myFollowersIds);
   // Upload profile photo
   const changeMyProfilePhotoMutation = useMutation({
     mutationFn: (imageFile) =>
@@ -63,10 +76,7 @@ export default function ProfileHeader() {
 
   function handleChangeMyProfileCover(e) {
     const file = e.target.files[0];
-    console.log(file);
     if (!file) return;
-    console.log(file, "file");
-    console.log(privacy, "privacy");
     setImageFile(file);
     onOpen();
   }
@@ -88,6 +98,17 @@ export default function ProfileHeader() {
     deleteMyProfileCoverMutation.mutate();
   }
 
+  function handleFollowersAndFollowingList(item) {
+    const value = item.toLowerCase();
+
+    if (value === "followers" || value === "following") {
+      setFollowType({
+        type: value,
+        ids: value === "followers" ? myFollowersIds : myFollowingIds,
+      });
+      onOpenFollowers();
+    }
+  }
   if (myProfileQuery.isPending) return <ProfileSkeleton />;
 
   return (
@@ -242,8 +263,9 @@ export default function ProfileHeader() {
             <div className="grid grid-cols-3 gap-2 sm:gap-4">
               {["Followers", "Following", "Bookmarks"].map((item) => (
                 <div
+                  onClick={() => handleFollowersAndFollowingList(item)}
                   key={item}
-                  className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-5 border-2 border-gray-200 rounded-2xl"
+                  className={`flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-5 border-2 border-gray-200 rounded-2xl ${item === "Followers" || item === "Following" ? "cursor-pointer" : "cursor-default"}`}
                 >
                   <h5 className="text-[10px] sm:text-xs uppercase text-gray-500 font-bold">
                     {item}
@@ -259,7 +281,9 @@ export default function ProfileHeader() {
               ))}
             </div>
           </div>
-
+          {/* <Button className="max-w-fit" onPress={onOpen}>
+        Open Modal
+      </Button> */}
           {/* ABOUT SECTION */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
             <div className="md:col-span-2 bg-gray-100 border border-gray-200 rounded-2xl p-4 flex flex-col gap-2">
@@ -279,12 +303,12 @@ export default function ProfileHeader() {
             <div className="flex flex-col gap-4">
               <div className="bg-blue-50/30 border border-blue-200 rounded-2xl p-3">
                 <p className="text-xs font-bold text-blue-800">MY POSTS</p>
-                <p className="font-bold text-lg">20</p>
+                <p className="font-bold text-lg">{myPostsLength}</p>
               </div>
 
               <div className="bg-blue-50/30 border border-blue-200 rounded-2xl p-3">
                 <p className="text-xs font-bold text-blue-800">SAVED POSTS</p>
-                <p className="font-bold text-lg">0</p>
+                <p className="font-bold text-lg">{myBookmarksLength}</p>
               </div>
             </div>
           </div>
@@ -299,6 +323,16 @@ export default function ProfileHeader() {
         changeMyProfileCoverMutation={changeMyProfileCoverMutation}
         imageFile={imageFile}
       />
+
+      {/* FOLLOWERS MODAL */}
+      {followType && (
+        <FollowersFollowingModal
+          onOpen={onOpenFollowers}
+          isOpen={isOpenFollowers}
+          onOpenChange={onOpenChangeFollowers}
+          followType={followType}
+        />
+      )}
     </>
   );
 }

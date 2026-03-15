@@ -6,7 +6,6 @@ import { $HOOKS_REPOSITORY } from "../../../../hooks/hooks_repository";
 import { useState } from "react";
 
 export default function PostCard({ userPosts, isMyPost }) {
-  console.log("userPosts", userPosts);
   const { userId } = useParams();
   const { openViewerImage, setOpenViewerImage } =
     $HOOKS_REPOSITORY.useImageInFullScreen();

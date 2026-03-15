@@ -1,30 +1,14 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { $Services } from "../../../services/services-repository";
+import { useEffect, useRef } from "react";
 import PostCard from "../../feed/posts/comments/PostCard";
 import PostSkeleton from "../skeletons/PostSkeleton";
-import { $QUERY_KEYS } from "../../../query-keys/queryKeys";
 
-export default function ProfileBody() {
-  const [activeTab, setActiveTab] = useState("myPosts");
+export default function ProfileBody({
+  myPostsQuery,
+  myBookmarksQuery,
+  activeTab,
+  setActiveTab,
+}) {
   const observerRef = useRef();
-
-  // Get user posts
-  const myPostsQuery = useInfiniteQuery({
-    queryKey: $QUERY_KEYS.posts.myPosts,
-    queryFn: ({ pageParam: page = 1 }) =>
-      $Services.POSTS_REPOSITORY.getHomeFeed({ only: "me", page }),
-    getNextPageParam: (lastPage) => lastPage?.meta?.pagination?.nextPage,
-  });
-
-  // Get saved posts
-  const myBookmarksQuery = useInfiniteQuery({
-    queryKey: $QUERY_KEYS.posts.bookmarks,
-    queryFn: ({ pageParam: page = 1 }) =>
-      $Services.USER_REPOSITORY.getBookmarks({ page }),
-    getNextPageParam: (lastPage) => lastPage?.meta?.pagination?.nextPage,
-    enabled: activeTab === "saved",
-  });
 
   //Intersection Observer for infinite scroll
   useEffect(() => {
