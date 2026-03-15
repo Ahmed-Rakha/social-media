@@ -32,13 +32,6 @@ export default function FeedRightSideBar() {
     queryKey: ["search-suggested-friends", search],
   });
 
-  // Handle search
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-    reset({ search: e.target.value });
-    searchSuggestedFriends.refetch();
-  };
-
   // Get suggestions
   const suggestions =
     search.length > 0
@@ -69,11 +62,13 @@ export default function FeedRightSideBar() {
       <Input
         {...register("search")}
         onClear={() => setSearch("")}
-        onChange={handleSearch}
+        onChange={(e) => setSearch(e.target.value)}
         type="text"
+        size="md"
+        autoComplete="off"
         startContent={<i className="fa-solid fa-magnifying-glass"></i>}
         placeholder="Search friends..."
-        className={`my-3 border-1 border-neutral-200 rounded-xl outline-none hidden xl:flex ${isOpenSuggestions ? "flex" : "hidden"}`}
+        className={`my-3 border-1 border-neutral-200 rounded-xl outline-none hidden xl:flex overflow-hidden ${isOpenSuggestions ? "flex" : "hidden"}`}
       />
       <div>
         {suggestions?.length > 0 ? (
