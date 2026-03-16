@@ -49,6 +49,7 @@ export default function EditPost({ postId, userId, isBookmarked }) {
   }
 
   const bookmarkPostMutation = useMutation({
+    mutationKey: $QUERY_KEYS.posts.bookmark(postId),
     mutationFn: (postId) =>
       $Services.POSTS_REPOSITORY.bookmarkAndUnbookmarkPost(postId),
     onSuccess: (data) => {
@@ -56,6 +57,9 @@ export default function EditPost({ postId, userId, isBookmarked }) {
       $Utilities.Alerts.displaySuccess(
         `${data.data.bookmarked ? "Bookmarked" : "Unbookmarked"} successfully`,
       );
+      queryClient.invalidateQueries({
+        queryKey: $QUERY_KEYS.posts.bookmark(postId),
+      });
       queryClient.invalidateQueries({
         queryKey: $QUERY_KEYS.posts.all,
       });
@@ -67,9 +71,16 @@ export default function EditPost({ postId, userId, isBookmarked }) {
   });
 
   const deletePostMutation = useMutation({
+    mutationKey: $QUERY_KEYS.posts.delete(postId),
     mutationFn: (postId) => $Services.POSTS_REPOSITORY.deletePost(postId),
     onSuccess: () => {
       $Utilities.Alerts.displaySuccess("Post deleted successfully");
+      queryClient.invalidateQueries({
+        queryKey: $QUERY_KEYS.posts.delete(postId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: $QUERY_KEYS.posts.all,
+      });
     },
     onError: (error) => {
       $Utilities.Alerts.displayError(error);
