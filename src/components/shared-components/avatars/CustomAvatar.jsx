@@ -9,9 +9,9 @@ export default function CustomAvatar( { avatarData, size = "w-13 h-13" } ) {
         className={`${size}  rounded-full self-start shrink-0 overflow-hidden cursor-pointer border-2 border-gray-400 flex items-center justify-center`}
       >
         <img
-          src={avatarData?.photo || Avatar}
+          src={avatarData?.image || Avatar}
           alt={avatarData?.name || "User"}
-          className={`${avatarData?.photo ? "" : "transform scale-200"} `}
+          className={`${avatarData?.image ? "" : "transform scale-200"} `}
         />
       </div>
     </Tooltip>

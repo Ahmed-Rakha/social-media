@@ -1,9 +1,10 @@
-import { Avatar, Card, CardBody, CardHeader, Image } from "@heroui/react";
+import { Card, CardBody, CardHeader, Image } from "@heroui/react";
 import { Link, useParams } from "react-router";
 import { $Utilities } from "../../../../utilities/utilities-repository";
 import ImageInFullScreen from "../../../shared-components/images/ImageInFullScreen";
 import { $HOOKS_REPOSITORY } from "../../../../hooks/hooks_repository";
 import { useState } from "react";
+import CustomAvatar from "../../../shared-components/avatars/CustomAvatar";
 
 export default function PostCard({ userPosts, isMyPost }) {
   const { userId } = useParams();
@@ -28,12 +29,11 @@ export default function PostCard({ userPosts, isMyPost }) {
       )}
       <Card className="w-full p-4">
         <CardHeader className="flex gap-3">
-          <Avatar
-            isBordered
-            radius="full"
-            size="md"
-            src={userPosts?.user?.photo}
-          />
+          <CustomAvatar avatarData={{
+            name: userPosts?.user?.name,
+            image: userPosts?.user?.photo,
+            username: userPosts?.user?.username
+          }} />
           <div className="flex flex-col">
             {userId === userPosts?.user?._id || isMyPost ? (
               <p className="text-md font-semibold text-default-600">
